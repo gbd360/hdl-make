@@ -55,6 +55,7 @@ class ToolMakefile(object):
         self._filename = "Makefile"
         self._all_sources = []
         self.default_library = "work"
+        self.requires_top_level = True
 
     def __del__(self):
         if self._file:
