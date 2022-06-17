@@ -28,6 +28,7 @@ from __future__ import absolute_import
 import logging
 
 from ..sourcefiles.dep_file import DepFile, DepRelation
+from ..sourcefiles.srcfile import SVFile
 from .systemlibs import all_system_libs
 
 
@@ -39,7 +40,7 @@ class DepParser(object):
         """Base dummy interface method for the HDL parse execution"""
         pass
 
-    
+
 class AllRelations(object):
     def __init__(self):
         # Dict of Rel to itself.
@@ -154,11 +155,17 @@ def check_graph(graph, fileset, syslibs, standard_libs=None):
                 continue
 
             # if relation is a USE PACKAGE, check against
-            # the standard libs provided by the tool HDL compiler
-            required_lib = rel.lib_name
+            # the standard libs provided by the tool HDL compiler. The
+            # module name is DIFFERENT for systemverilog wrt VHDL,
+            # hence we need to check as well file type:
+            if isinstance(investigated_file, SVFile):
+                required_lib = rel.obj_name
+            else:
+                required_lib = rel.lib_name
+
             if (standard_libs is not None
-                 and rel.rel_type is DepRelation.PACKAGE
-                 and required_lib in standard_libs):
+                and rel.rel_type is DepRelation.PACKAGE
+                and required_lib in standard_libs):
                 logging.debug("Not satisfied relation %s in %s will "
                               "be covered by the target compiler "
                               "standard libs.",
