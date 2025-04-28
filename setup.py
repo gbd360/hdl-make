@@ -20,7 +20,7 @@ setup(
    author="Javier D. Garcia-Lasheras",
    author_email="hdl-make@ohwr.org",
    license="GPLv3",
-   url="http://www.ohwr.org/projects/hdl-make",
+   url="https://gitlab.com/ohwr/project/hdl-make",
    packages=find_packages(),
    entry_points={
       'console_scripts': [

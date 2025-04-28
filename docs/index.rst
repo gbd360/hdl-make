@@ -26,9 +26,9 @@ Makefiles, and fetching IP-Core libraries from remote repositories.
 Contribute
 ----------
 
-- Wiki Pages: https://ohwr.org/projects/hdl-make/wiki
-- Issue Tracker: https://ohwr.org/project/hdl-make/issues
-- Source Code: https://ohwr.org/project/hdl-make
+- Wiki Pages: https://gitlab.com/ohwr/project/hdl-make/wikis
+- Issue Tracker: https://gitlab.com/ohwr/project/hdl-make/issues
+- Source Code: https://gitlab.com/ohwr/project/hdl-make
 
 
 Support
@@ -216,7 +216,7 @@ Git
 ~~~
 
 Fetch the code from the official ``hdlmake`` git repository, that can be found at the next link:
-- http://www.ohwr.org/projects/hdl-make/repository
+- https://gitlab.com/ohwr/project/hdl-make
 
 Once you have a valid ``hdlmake`` source tree, you can install ``hdlmake`` into your Python site-packages directly via *setup.py install*:
 
@@ -988,8 +988,8 @@ Xilinx ISE
 
 As a non-trivial design example of a real use case of ``hdlmake`` with  Xilinx ISE, we have chosen the **White Rabbit PTP Core** reference design the European Organization for Nuclear Research (CERN) provides for the **Simple PCIe FMC Carrier (SPEC)**. This open-hardware platform is powered by a **Xilinx Spartan-6** and is used in multiple experimental physics facilities around the world.
 
-- WR PTP Core: http://www.ohwr.org/projects/wr-cores/wiki/Current_release
-- Simple PCIe FMC Carrier: http://www.ohwr.org/projects/spec/wiki
+- WR PTP Core: https://gitlab.com/ohwr/project/wr-cores/wikis/Current-release
+- Simple PCIe FMC Carrier: https://gitlab.com/ohwr/project/spec/wikis
 
 In the following instructions, we will see how easy is to build the bitstream from the command line (**tested on both Windows and Linux hosts**).
 
@@ -997,7 +997,7 @@ We start by cloning the repository and getting into the SPEC reference design (*
 
 .. code-block:: bash
 
-   git clone git://ohwr.org/hdl-core-lib/wr-cores.git
+   git clone https://gitlab.com/ohwr/project/wr-cores.git
    cd wr-cores/syn/spec_ref_design/
 
 Now, the WR PTP Core requires a series of HDL libraries that are provided under ``hdlmake`` format in the CERN Open Hardware repository. In this example, you have the option of fetching all of the dependencies for all of the reference designs provided in the downloaded source code by using the ``git submodule`` mechanism, this is:
@@ -1051,7 +1051,7 @@ Xilinx Vivado
 As an advanced example for Xilinx Vivado, we have chosen the Beam Position Monitor (BPM) design from the Beam Diagnostics group of the Brazilian Synchrotron Light Laboratory (LNLS) for the **AMC FMC Carrier (AFC)**. Equiped in **Xilinx Artix-7** FPGA, it allows to connect clock source to any clock input.
 
 - BPM Design: https://github.com/lnls-dig/bpm-gw
-- AMC FMC Carrier (AFC): http://www.ohwr.org/projects/afc/wiki
+- AMC FMC Carrier (AFC): https://gitlab.com/ohwr/project/afc/wikis
 
 
 In the following instructions, we will see how easy is to build the bitstream from the command line (**tested on both Windows and Linux hosts**).
@@ -1083,7 +1083,7 @@ Alternatively, if you only want to download the design submodule dependencies th
                          "modules/utils",
                          "modules/pcie",
                          "platform"],
-               "git" : [ "git://ohwr.org/hdl-core-lib/etherbone-core.git",
+               "git" : [ "git://gitlab.com/ohwr/hdl-core-lib/etherbone-core.git",
                          "https://github.com/lnls-dig/general-cores.git",
                          "https://github.com/lnls-dig/dsp-cores.git" ] }
 
@@ -1156,14 +1156,14 @@ Intel Quartus
 
 In the same source code design the CERN provides for the White Rabbit PTP Core, it is also included an example for the **VME FMC Carrier HPC-DDR3 (VFC-HD)**. The VFC-HD is an **Intel Arria V** based VME64x carrier for one High Pin Count (HPC) FPGA Mezzanine Card (FMC, VITA 57). It is has six SFP+ transceivers compatible with support for rad-hard GBT links, CERN Beam Synchronous Timing (BST), White Rabbit and Ethernet.
 
-- WR PTP Core: http://www.ohwr.org/projects/wr-cores/wiki/Current_release
-- VME FMC Carrier HPC-DDR3 (VFC-HD): http://www.ohwr.org/projects/vfc-hd/wiki
+- WR PTP Core: https://gitlab.com/ohwr/project/wr-cores/wikis/Current-release
+- VME FMC Carrier HPC-DDR3 (VFC-HD): https://gitlab.com/ohwr/project/vfc-hd/wikis
 
 We start by cloning the repository and getting into the VFC-HD reference design (**tested with Release v4.0**):
 
 .. code-block:: bash
 
-   git clone git://ohwr.org/hdl-core-lib/wr-cores.git
+   git clone https://gitlab.com/ohwr/project/wr-cores.git
    cd wr-cores/syn/vfchd_ref_design/
 
 Now, the WR PTP Core requires a series of HDL libraries that are provided under ``hdlmake`` format in the CERN Open Hardware repository. In this example, you have the option of fetching all of the dependencies for all of the reference designs provided in the downloaded source code by using the ``git submodule`` mechanism, this is:
@@ -1275,7 +1275,7 @@ In the same sources provided by CERN for the White Rabbit PTP core, there are se
 
 .. code-block:: bash
 
-   git clone git://ohwr.org/hdl-core-lib/wr-cores.git
+   git clone https://gitlab.com/ohwr/project/wr-cores.git
    cd wr-cores
    git checkout wrpc-v4.0
    git submodule init
