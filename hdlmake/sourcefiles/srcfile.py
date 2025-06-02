@@ -422,6 +422,7 @@ VERILOG_EXTENSIONS = (
 
 SV_EXTENSIONS = (
     'sv',
+    'svp',
     'svh')
 
 
