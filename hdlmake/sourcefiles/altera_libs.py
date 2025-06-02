@@ -80,6 +80,7 @@ altera_system_libraries =\
      "altera_syncram", "altera_pll", "altera_iopll",
      "fourteennm_altera_iopll",
      "fourteennm_simple_iopll", "arriav_dffe",
+     "altera_xcvr_native_av", "alt_xcvr_reconfig",
      "arriav_mux41",
      "arriav_and1",
      "arriav_and16", "arriav_bmux21", "arriav_b17mux21",
