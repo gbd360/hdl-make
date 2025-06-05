@@ -44,9 +44,9 @@ work/gate/.gate_vhdl: gate.vhdl
 
 # USER SIM COMMANDS
 sim_pre_cmd:
-		
+	
 sim_post_cmd:
-		
+	
 
 CLEAN_TARGETS := $(LIBS) xilinxsim.ini $(LIBS) fuse.xmsgs fuse.log fuseRelaunch.cmd isim isim.log isim.wdb isim_proj isim_proj.*
 

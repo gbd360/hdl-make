@@ -32,9 +32,9 @@ work/gate2/.gate2_v: ../files/gate2.v
 
 # USER SIM COMMANDS
 sim_pre_cmd:
-		
+	
 sim_post_cmd:
-		
+	
 
 CLEAN_TARGETS := $(LIBS) run.command ivl_vhdl_work work
 

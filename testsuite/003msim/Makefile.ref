@@ -41,9 +41,9 @@ work/hdlmake/gate_vhdl: ../files/gate.vhdl
 
 # USER SIM COMMANDS
 sim_pre_cmd:
-		
+	
 sim_post_cmd:
-		
+	
 
 CLEAN_TARGETS := $(LIBS) modelsim.ini transcript
 
