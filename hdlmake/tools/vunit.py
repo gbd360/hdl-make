@@ -27,7 +27,6 @@ from __future__ import print_function
 from __future__ import absolute_import
 
 import logging
-import vunit
 from os.path import join, dirname
 
 from .makefilesim import MakefileSim
@@ -297,6 +296,8 @@ class ToolVunitSim(MakefileSim):
     def pre_build_file_set_hook(self, file_set):
         """Modifies the files to contain path for system-wide
         installed VUnit include vunit_defines.svh"""
+
+        import vunit
 
         include_path = join(dirname(vunit.__file__), "verilog")
         vunit_include = join(include_path, "include")
