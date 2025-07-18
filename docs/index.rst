@@ -133,8 +133,10 @@ Supported Tools
 +--------------------------+-----------+------------+
 | GHDL                     | n.a.      | VHDL       |
 +--------------------------+-----------+------------+
-| NVC                      | n.a.      | VHDL       |
+| NVC                      | n.a.      | Yes [#]_   |
 +--------------------------+-----------+------------+
+
+.. [#] Good support for VHDL. Verilog support still very experimental.
 
 Supported Operating Systems
 ---------------------------
