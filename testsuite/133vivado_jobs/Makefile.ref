@@ -141,7 +141,7 @@ prom: bitstream prom.tcl
 		$(SYN_POST_PROM_CMD)
 		touch $@
 
-CLEAN_TARGETS := $(LIBS) .Xil *.jou *.log *.pb *.dmp *.xsa $(PROJECT).cache $(PROJECT).data work $(PROJECT).runs $(PROJECT).hw $(PROJECT).sim $(PROJECT).gen $(PROJECT).ip_user_files $(PROJECT).srcs $(PROJECT_FILE)
+CLEAN_TARGETS := $(LIBS) .Xil *.jou *.log *.pb *.dmp *.xsa $(PROJECT).cache $(PROJECT).data work $(PROJECT).runs $(PROJECT).hw $(PROJECT).sim $(PROJECT).gen $(PROJECT).ip_user_files $(PROJECT).srcs $(PROJECT).ioplanning $(PROJECT_FILE)
 
 clean:
 		rm -rf $(CLEAN_TARGETS)
