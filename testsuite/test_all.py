@@ -624,6 +624,9 @@ def test_vivado_jobs_133():
 def test_gowin_134():
     run_compare(path="134gowin")
 
+def test_insta_names_135():
+    run_compare(path="135merged_names")
+
 @pytest.mark.xfail
 def test_xfail():
     """This is a self-consistency test: the test is known to fail"""

@@ -564,7 +564,7 @@ class VerilogParser(DepParser):
             re.DOTALL | re.MULTILINE)
 
         m_instantiation = re.compile(
-            r"\s*\b(\w+)\s+(?:#\s*\(.*?\)\s*)?(\w+)\s*(?:\[.*?\]\s*)?\(.*?\)$",
+            r"\s*\b(\w+)\s*(?:#\s*\(.*?\)\s*)?(\w+)\s*(?:\[.*?\]\s*)?\(.*?\)$",
             re.DOTALL | re.MULTILINE)
 
         m_stmt = re.compile(r'(?:\s*(?:(?:\b(?:function|task)\b.*?\bend(?:function|task)\b)'
