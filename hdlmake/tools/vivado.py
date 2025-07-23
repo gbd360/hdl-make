@@ -76,7 +76,7 @@ class ToolVivado(ToolXilinx):
                                "$(PROJECT).runs", "$(PROJECT).hw",
                                "$(PROJECT).sim", "$(PROJECT).gen",
                                "$(PROJECT).ip_user_files", "$(PROJECT).srcs",
-                               "$(PROJECT_FILE)"]}
+                               "$(PROJECT).ioplanning", "$(PROJECT_FILE)"]}
     CLEAN_TARGETS.update(ToolXilinx.CLEAN_TARGETS)
 
     _XILINX_RUN_IMPL = _XILINX_RUN = '$(TCL_OPEN)' + '\n' \
