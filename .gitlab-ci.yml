@@ -1,6 +1,6 @@
-
 stages:
   - test
+  - deploy
 
 test:
   stage: test
@@ -25,3 +25,15 @@ test:
     reports:
       junit:
         - testsuite_results.xml
+
+pages:
+  stage: deploy
+  image: sphinxdoc/sphinx
+  script:
+    - make -C docs html
+    - mv docs/_build/html public
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
