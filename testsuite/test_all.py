@@ -627,6 +627,9 @@ def test_gowin_134():
 def test_insta_names_135():
     run_compare(path="135merged_names")
 
+def test_wrong_vlog_parse_136():
+    run_compare(path="136wrong_vlog_parse")
+
 @pytest.mark.xfail
 def test_xfail():
     """This is a self-consistency test: the test is known to fail"""
