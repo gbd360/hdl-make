@@ -26,7 +26,7 @@ Makefiles, and fetching IP-Core libraries from remote repositories.
 Contribute
 ----------
 
-- Wiki Pages: https://gitlab.com/ohwr/project/hdl-make/wikis
+- Wiki Pages: https://gitlab.com/ohwr/project/hdl-make/wikis (outdated)
 - Issue Tracker: https://gitlab.com/ohwr/project/hdl-make/issues
 - Source Code: https://gitlab.com/ohwr/project/hdl-make
 
@@ -62,7 +62,7 @@ the associated source code deliverables.
    :scale: 40
    :alt: CERN Logo
    :align: center
-   :target: http://home.web.cern.ch/
+   :target: http://home.cern/
    :figclass: align-center
 
 
@@ -119,6 +119,8 @@ Supported Tools
 +--------------------------+-----------+------------+
 | Lattice Semi. Diamond    | Yes       | n.a.       |
 +--------------------------+-----------+------------+
+| Gowin EDA                | Yes       | n.a.       |
++--------------------------+-----------+------------+
 | Xilinx ISim              | n.a.      | Yes        |
 +--------------------------+-----------+------------+
 | Mentor Graphics Modelsim | n.a.      | Yes        |
@@ -145,7 +147,7 @@ so you don't need to cheat the system by using Cygwin like environments.
 +-------------------+--------------------------------------------------+
 | Operating System  | Comments                                         |
 +===================+==================================================+
-| Linux             | tested on Ubuntu Precise/Trusty, CentOS 6/7      |
+| Linux             | tested on Ubuntu 12/14/22/24, CentOS 6/7, Alma   |
 +-------------------+--------------------------------------------------+
 | Windows           | tested on Windows 7/8/8.1/10 CMD and PowerShell  |
 +-------------------+--------------------------------------------------+
@@ -179,16 +181,7 @@ As a prerequisite, you must have the following programs installed in your host m
 
 .. note:: In order to support Python 2.7.x and 3.x with a single codebase, the ``six`` Python package is now required to run ``hdlmake`` 3.0 version.
 
-There are three methods to obtain and install ``hdlmake``: via git repository, PyPI or `guix <https://guix.gnu.org/>`_. PyPI is the preferred method if you are only interested in releases. Git may be preferred if you are a developer, or would like to stay in sync with active development. Guix provides recent development versions.
-
-Guix
-~~~~
-
-To install directly from `Guix <https://guix.gnu.org/>`_ simply run:
-
-.. code-block:: bash
-
-   guix install hdlmake
+There are two methods to obtain and install ``hdlmake``: via git repository or PyPI. PyPI is the preferred method if you are only interested in releases. Git may be preferred if you are a developer, or would like to stay in sync with active development.
 
 
 PyPI and ``pip``
@@ -204,6 +197,14 @@ To install directly from `PyPI <https://pypi.python.org/pypi>`_ simply run:
 
    pip install hdlmake
 
+The next option, if you want to install specific version from Git is:
+
+.. code-block:: bash
+
+   pip install git+https://gitlab.com/ohwr/project/hdl-make@master
+
+This case `pip` will make all necessary routines to instal ``hdlmake`` in your shell.
+
 Alternatively, if you have already downloaded a source distribution, you can install it as follows:
 
 .. code-block:: bash
@@ -216,14 +217,17 @@ Git
 ~~~
 
 Fetch the code from the official ``hdlmake`` git repository, that can be found at the next link:
-- https://gitlab.com/ohwr/project/hdl-make
+
+.. code-block:: bash
+
+   git clone https://gitlab.com/ohwr/project/hdl-make
 
 Once you have a valid ``hdlmake`` source tree, you can install ``hdlmake`` into your Python site-packages directly via *setup.py install*:
 
 .. code-block:: bash
 
    cd /path_to_hdlmake_sources/hdl-make
-   python2.7 setup.py install
+   python setup.py install
 
 ``hdlmake`` is now installed into your active Python environment and can be run simply by executing ``hdlmake`` in your shell.
 
@@ -240,7 +244,7 @@ Create a launch script in /usr/bin or any other available location at shell $PAT
 .. code-block:: bash
 
    #!/usr/bin/env bash
-   PYTHONPATH=/path_to_hdlmake_sources/hdl-make python2.7 -m hdlmake $@
+   PYTHONPATH=/path_to_hdlmake_sources/hdl-make python -m hdlmake $@
 
 Once the launch script has been created, the appropriate execution rights must be set:
 
@@ -250,7 +254,7 @@ Once the launch script has been created, the appropriate execution rights must b
 
 In the above examples the following nomenclature is used:
 
-- ``python2.7`` is the executable of the Python deployment we want to use with ``hdlmake``.
+- ``python`` is the executable of the Python deployment we want to use with ``hdlmake``. Might be any supported version, mostly 3.x.
 - ``path_to_hdlmake_sources`` is the absolute path in which the ``hdlmake`` source code has been fetched.
 - ``hdl-make`` is the name of the folder created when you checked out the repo.
 - ``hdlmake`` is the actual hdlmake package (this is not binary or a file, this is folder name).
@@ -306,7 +310,7 @@ To make it available on the command line, add this to PATH (e.g. for Python 2.7)
 
    c:\Python27
 
-Before running ``hdlmake 3.0``, you'll need to instal ``six`` package to work with Hdlmake (``six`` is required to support Python 2.7 and 3.x with a single code base).
+Before running ``hdlmake``, you'll need to instal ``six`` package to work with Hdlmake (``six`` is required to support Python 2.7 and 3.x with a single code base).
 
 We can install ``six`` by just using the ``pip`` tool that comes with the Python deployment:
 
@@ -607,10 +611,11 @@ The following are the different **target names** a synthesis Makefile may featur
    - ``map``: Map the translated design into FPGA building blocks.
    - ``par``: Execute Place & Route for the selected FPGA device.
    - ``bitstream``: Generate the bitstream for FPGA programming.
+   - ``prom``: Export bitstream for flashing for specific devices.
 
 For each of the potential synthesis targets, a **Tool Command Language (TCL)** file will be created as a dependency in the Makefile. These TCL files include the tool specific commands that are then sourced to the selected tool to perform the different synthesis stages. We have chosen to use TCL files as the intermediate format as this is the de-facto standard language that has been selected by the FPGA vendors.
 
-A TCL file associated to a specific synthesis stage can be generated without sourcing it to the tool by just calling Make with the associated target name (``project.tcl``, ``synthesize.tcl``, ``translate.tcl``, ``map.tcl``, ``par.tcl``, ``bitstream.tcl``). In this way, this files can be integrated into other custom development flows.
+A TCL file associated to a specific synthesis stage can be generated without sourcing it to the tool by just calling Make with the associated target name (``project.tcl``, ``synthesize.tcl``, ``translate.tcl``, ``map.tcl``, ``par.tcl``, ``bitstream.tcl``, ``prom.tcl```). In this way, this files can be integrated into other custom development flows.
 
 .. note:: note that we have an additional ``files.tcl`` target. This is a dependency target for the project, and includes the TCL commands that are required all of the different design files to the tool in an appropriated way.
 
