@@ -13,6 +13,8 @@ syn_properties = [['prop1', 'val1' 'obj'],
                   ["prop2", "is", "too", "long"],
                   ["prop3 options", "obj"],
                   ["prop4 err", "obj"],
+                  ["prop5" "test", "obj"],
+                  ["prop6", "test", "obj"],
                   ["steps.synth_design", "2"],
                   ["steps.impl", "3"]]
 
