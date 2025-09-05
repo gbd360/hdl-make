@@ -120,10 +120,10 @@ if {{ '$$'timing '&&' {fail_on_timing} }} {{
                     name_hierarchy = name_list[0].split(".")
                     if name_hierarchy[0] == "steps":
                         if name_hierarchy[1] == "synth_design":
-                            synthesize_new.append(tmp.format(
+                            project_new.append(tmp.format(
                                 prop[0], prop[1], 'get_runs synth_1'))
                         else:
-                            par_new.append(tmp.format(
+                            project_new.append(tmp.format(
                                 prop[0], prop[1], 'get_runs impl_1'))
                     else:
                         project_new.append(tmp.format(
