@@ -28,7 +28,6 @@ from __future__ import absolute_import
 from .makefilesim import MakefileSim
 from ..util import shell
 from ..sourcefiles.srcfile import VerilogFile, VHDLFile, SVFile
-import six
 
 
 class MakefileVsim(MakefileSim):
@@ -70,7 +69,7 @@ class MakefileVsim(MakefileSim):
         vlog_flags = "-quiet " + __get_rid_of_vsim_incdirs(
             self.manifest_dict.get("vlog_opt", ''))
         vmap_flags = "" + self.manifest_dict.get("vmap_opt", '')
-        for var, value in six.iteritems(self.custom_variables):
+        for var, value in self.custom_variables.items():
             self.writeln("%s := %s" % (var, value))
         self.writeln()
         self.writeln("VCOM_FLAGS := %s" % vcom_flags)
@@ -134,7 +133,7 @@ class MakefileVsim(MakefileSim):
         self.writeln("$(VERILOG_OBJ): " + ' '.join(self.additional_deps))
         self.writeln("$(VHDL_OBJ): $(LIB_IND) " + ' '.join(self.additional_deps))
         self.writeln()
-        for filename, filesource in six.iteritems(self.copy_rules):
+        for filename, filesource in self.copy_rules.items():
             self.writeln("{}: {}".format(filename, filesource))
             self.writeln("\t\t{} $< . 2>&1".format(shell.copy_command()))
             self.writeln()

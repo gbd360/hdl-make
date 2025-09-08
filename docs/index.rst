@@ -54,7 +54,7 @@ If you are seeking for consultancy and training services on advanced ``hdlmake``
 Copyright notice
 ----------------
 
-`CERN <http://home.web.cern.ch/>`_, the European Organization for Nuclear Research,
+`CERN <http://home.cern/>`_, the European Organization for Nuclear Research,
 is the first and sole owner of all copyright of both this document and
 the associated source code deliverables.
 
@@ -152,17 +152,13 @@ so you don't need to cheat the system by using Cygwin like environments.
 | Windows           | tested on Windows 7/8/8.1/10 CMD and PowerShell  |
 +-------------------+--------------------------------------------------+
 
+``hdlmake`` also works with `WSL <https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux>`_.
+
+
 Supported Python Version
 ------------------------
 
-+----------+-------------------------------+
-| Version  | Comments                      |
-+==========+===============================+
-| Python 2 | Runs on 2.7.x                 |
-+----------+-------------------------------+
-| Python 3 | Runs on 3.x                   |
-+----------+-------------------------------+
-
+From version 4.0 onwards, ``hdlmake`` officially supports Python3.9+ only.
 
 
 Installing ``hdlmake``
@@ -178,8 +174,6 @@ As a prerequisite, you must have the following programs installed in your host m
 - ``python``: you need a compatible Python deployment
 - ``git``: you need git for both fetching the ``hdlmake`` code and accessing to remote HDL repositories.
 - ``svn``: svn will only be used when accessing to remote SVN HDL repositories.
-
-.. note:: In order to support Python 2.7.x and 3.x with a single codebase, the ``six`` Python package is now required to run ``hdlmake`` 3.0 version.
 
 There are two methods to obtain and install ``hdlmake``: via git repository or PyPI. PyPI is the preferred method if you are only interested in releases. Git may be preferred if you are a developer, or would like to stay in sync with active development.
 
@@ -300,23 +294,15 @@ Install Git-scm for Windows. If the bin dir is not added to the PATH, you'll nee
 Python
 ~~~~~~
 
-Install Python (2.7 or 3.x) for Windows:
+Install Python (3.x) for Windows:
 
 - https://www.python.org/downloads/windows/
 
-To make it available on the command line, add this to PATH (e.g. for Python 2.7):
+To make it available on the command line, add this to PATH:
 
 .. code-block:: bash
 
-   c:\Python27
-
-Before running ``hdlmake``, you'll need to instal ``six`` package to work with Hdlmake (``six`` is required to support Python 2.7 and 3.x with a single code base).
-
-We can install ``six`` by just using the ``pip`` tool that comes with the Python deployment:
-
-.. code-block:: bash
-
-   pip install six
+   c:\Python39
 
 
 Install hdlmake package
@@ -332,7 +318,7 @@ And be sure the following directory is in the PATH, as it will contain ``hdlmake
 
 .. code-block:: bash
 
-   c:\Python27\scripts
+   c:\Python39\scripts
 
 
 
