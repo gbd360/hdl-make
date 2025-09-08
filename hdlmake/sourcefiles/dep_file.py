@@ -27,7 +27,6 @@ import os
 import logging
 
 from ..util import path as path_mod
-import six
 
 
 class DepRelation(object):
@@ -95,7 +94,7 @@ class File(object):
 
     def __init__(self, path, module=None):
         self.path = path
-        assert not isinstance(module, six.string_types)
+        assert not isinstance(module, str)
         self.module = module
 
     @property
@@ -153,7 +152,7 @@ class DepFile(File):
     File but also provides dependencies"""
 
     def __init__(self, path, module):
-        assert isinstance(path, six.string_types)
+        assert isinstance(path, str)
         File.__init__(self, path=path, module=module)
         # Relations provided/required by this file
         self.provides = set()

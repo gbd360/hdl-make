@@ -30,7 +30,6 @@ import logging
 
 from ..util import path as path_mod
 from .dep_file import DepFile, File, ParamFile, ManualFile
-import six
 
 
 class SourceFile(DepFile):
@@ -39,7 +38,7 @@ class SourceFile(DepFile):
     HDL sources files, i.e. those that can be parsed"""
 
     def __init__(self, path, module):
-        assert isinstance(path, six.string_types)
+        assert isinstance(path, str)
         self.library = module.library
         DepFile.__init__(self, path=path, module=module)
 

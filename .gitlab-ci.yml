@@ -7,7 +7,6 @@ test:
   parallel:
     matrix:
       - PYVERSION:
-        # - '2.7' unsupported at the moment because of issues in code
         - '3.9'
         - '3.10'
         - '3.11'

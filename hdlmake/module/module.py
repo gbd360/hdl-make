@@ -36,7 +36,6 @@ from glob import glob
 from ..util import path as path_mod
 from ..util import shell
 from ..manifest_parser.manifestparser import ManifestParser
-import six
 
 
 class ModuleArgs(object):
@@ -314,8 +313,7 @@ class Module(object):
         # Included Makefiles
         included_makefiles_aux = []
         if "incl_makefiles" in self.manifest_dict:
-            if isinstance(self.manifest_dict["incl_makefiles"],
-                    six.string_types):
+            if isinstance(self.manifest_dict["incl_makefiles"], str):
                 included_makefiles_aux.append(
                     self.manifest_dict["incl_makefiles"])
             else:  # list
