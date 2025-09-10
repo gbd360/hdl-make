@@ -1,3 +1,3 @@
 """Current HDLMake version"""
 
-__version__ = "4.0dev1"
+__version__ = "4.0dev2"
