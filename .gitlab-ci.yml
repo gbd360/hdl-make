@@ -1,6 +1,7 @@
 stages:
   - test
   - deploy
+  - publish
 
 test:
   stage: test
@@ -36,3 +37,18 @@ pages:
     - public
   only:
   - master
+
+pypi-publish:
+  image: python:latest
+  stage: publish
+  variables:
+    TWINE_USERNAME: __token__
+    TWINE_PASSWORD: $GIT_TWINE_TOKEN
+    TWINE_REPOSITORY: testpypi
+  script:
+    - pip install build twine
+    - python -m build
+    - python -m twine check dist/*
+    - python -m twine upload --verbose -r $TWINE_REPOSITORY dist/*
+  rules:
+    - if: $CI_COMMIT_TAG
