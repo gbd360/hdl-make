@@ -3,6 +3,8 @@ src/build_hash.py
 examples
 hdlmake.pdf
 hdlmake.log
+coverage.xml
+.coverage
 *~
 *.swp
 *.swap
