@@ -7,7 +7,7 @@ TOP_LIBRARY := work
 TOP_MODULE := constr_test
 PROJECT := constr_test
 PROJECT_FILE := $(PROJECT).xpr
-TOOL_PATH := /tools/Xilinx/Vivado/2023.2/bin
+TOOL_PATH := 
 TCL_INTERPRETER := vivado -mode batch -source
 ifneq ($(strip $(TOOL_PATH)),)
 TCL_INTERPRETER := $(TOOL_PATH)/$(TCL_INTERPRETER)
@@ -34,8 +34,8 @@ files.tcl:
 	@echo '}' >> $@
 
 constraints.tcl:
-	@echo add_files -norecurse -fileset constrs_1 'constr.tcl' >> $@
 	@echo add_files -norecurse -fileset constrs_1 'constr.xdc' >> $@
+	@echo add_files -norecurse -fileset constrs_1 'constr.tcl' >> $@
 
 SYN_PRE_PROJECT_CMD := 
 SYN_POST_PROJECT_CMD := 
@@ -150,7 +150,7 @@ CLEAN_TARGETS := $(LIBS) .Xil *.jou *.log *.pb *.dmp *.xsa $(PROJECT).cache $(PR
 clean:
 		rm -rf $(CLEAN_TARGETS)
 		rm -rf project synthesize par bitstream prom
-		rm -rf project.tcl synthesize.tcl par.tcl bitstream.tcl prom.tcl files.tcl
+		rm -rf project.tcl synthesize.tcl par.tcl bitstream.tcl prom.tcl files.tcl constraints.tcl
 
 mrproper: clean
 		rm -rf *.bit *.bin *.xsa
