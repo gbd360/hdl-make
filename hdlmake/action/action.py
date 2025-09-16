@@ -248,17 +248,7 @@ class Action(object):
         """Initialize the parseable and privative constrset contents"""
         all_constraints = self._build_complete_constraints_set()
         for constr_aux in all_constraints:
-            if self.tool:
-                if isinstance(constr_aux, tuple(self.tool.get_parseable_files())):
-                    self.constrset.add(constr_aux)
-                elif isinstance(constr_aux, tuple(self.tool.get_privative_files())):
-                    self.constrset.add(constr_aux)
-                else:
-                    logging.debug("File not supported by the tool: %s",
-                                    constr_aux.path)
-            else:
-                # Not usual case: tool is not known
-                self.constrset.add(constr_aux)
+            self.constrset.add(constr_aux)
         if len(self.constrset) > 0:
             logging.info("Detected %d supported files that can be parsed",
                          len(self.constrset))
