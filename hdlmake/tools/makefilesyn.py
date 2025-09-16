@@ -48,17 +48,18 @@ class MakefileSyn(ToolMakefile):
         super(MakefileSyn, self).__init__()
         self._tcl_controls = {}
 
-    def write_makefile(self, top_manifest, fileset, filename=None,
-                       system_libs=None):
+    def write_makefile(self, top_manifest, fileset, constrset,
+                       filename=None, system_libs=None):
         """Generate a Makefile for the specific synthesis tool"""
         _check_synthesis_manifest(top_manifest)
-        self.makefile_setup(top_manifest, fileset, filename=filename)
+        self.makefile_setup(top_manifest, fileset, constrset, filename=filename)
         self.makefile_check_tool('syn_path')
         self.makefile_includes()
         self._makefile_syn_top()
         self._makefile_syn_tcl()
         self._makefile_syn_local()
         self._makefile_syn_files()
+        self._makefile_syn_constraints()
         self._makefile_syn_command()
         self._makefile_syn_build()
         self._makefile_syn_clean()
@@ -150,6 +151,20 @@ endif""")
         self._makefile_syn_files_map_files_to_lib()
         self.writeln()
 
+    def _makefile_syn_constraints(self):
+        """Write the constraints TCL section of the Makefile"""
+        constrset_dict = {}
+
+        self.writeln('constraints.tcl:')
+
+        constrset_dict.update(self.SUPPORTED_FILES)
+        # Extra commands before source files.
+        if "constraints" in self._tcl_controls:
+            for command in self._tcl_controls["constraints"].split('\n'):
+                self.writeln('\t\t@echo {0} >> $@'.format(command))
+
+        self.writeln()
+
     def _makefile_syn_local(self):
         """Generic method to write the synthesis Makefile local target"""
         self.writeln("#target for performing local synthesis\n"
@@ -157,7 +172,7 @@ endif""")
 
     def _makefile_syn_build(self):
         """Generate the synthesis Makefile targets for handling design build"""
-        stage_previous = "files.tcl"
+        stage_previous = "files.tcl constraints.tcl"
         stage_list = ["project", "synthesize", "translate",
                       "map", "par", "bitstream", "prom"]
         for stage in stage_list:
@@ -198,7 +213,7 @@ SYN_POST_{0}_CMD := {2}
             if stage in self._tcl_controls:
                 _stage_clean_targets += " %s" % (stage)
                 _stage_tcl_clean_targets += " %s.tcl" % (stage)
-        _stage_tcl_clean_targets+=" files.tcl"
+        _stage_tcl_clean_targets+=" files.tcl constraints.tcl"
         self.writeln("\t\t" + shell.del_command() + _stage_clean_targets)
         self.writeln("\t\t" + shell.del_command() + _stage_tcl_clean_targets)
         self.writeln()

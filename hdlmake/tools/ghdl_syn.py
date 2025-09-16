@@ -38,16 +38,17 @@ class GhdlSyn(MakefileSyn):
         super(GhdlSyn, self).__init__()
         self._tcl_controls = {}
 
-    def write_makefile(self, top_manifest, fileset, filename=None,
-                       system_libs = None):
+    def write_makefile(self, top_manifest, fileset, constrset,
+                       filename=None, system_libs=None):
         """Generate a Makefile for the specific synthesis tool"""
         _check_synthesis_manifest(top_manifest)
-        self.makefile_setup(top_manifest, fileset, filename=filename)
+        self.makefile_setup(top_manifest, fileset, constrset, filename=filename)
         self.makefile_check_tool('syn_path')
         self.makefile_includes()
         self._makefile_syn_top()
         self._makefile_syn_local()
         self._makefile_syn_files()
+        self._makefile_syn_constraints()
         self._makefile_syn_build()
         self._makefile_syn_clean()
         self._makefile_syn_phony()
@@ -116,7 +117,7 @@ class GhdlSyn(MakefileSyn):
         """Generate the synthesis Makefile targets for handling design build"""
         # HOW to set a file to write the synthesis result into.... 
         self.writeln("""\
-synthesis: files.tcl
+synthesis: constraints.tcl files.tcl
 \t$(GHDL) --synth $(GHDL_OPT) @files.tcl -e $(TOP_LIBRARY).$(TOP_MODULE)
 """)
 
