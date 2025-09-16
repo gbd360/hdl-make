@@ -4,18 +4,18 @@
 ##############################################
 
 TOP_LIBRARY := work
-TOP_MODULE := gate
-PROJECT := gate
+TOP_MODULE := constr_test
+PROJECT := constr_test
 PROJECT_FILE := $(PROJECT).xpr
-TOOL_PATH := 
+TOOL_PATH := /tools/Xilinx/Vivado/2023.2/bin
 TCL_INTERPRETER := vivado -mode batch -source
 ifneq ($(strip $(TOOL_PATH)),)
 TCL_INTERPRETER := $(TOOL_PATH)/$(TCL_INTERPRETER)
 endif
 
 SYN_FAMILY := 
-SYN_DEVICE := xc7z030
-SYN_PACKAGE := ffg676
+SYN_DEVICE := xc7a200t
+SYN_PACKAGE := ffg1156
 SYN_GRADE := -2
 
 TCL_CREATE := create_project $(PROJECT) ./
@@ -30,11 +30,12 @@ all: bitstream
 
 files.tcl:
 	@echo add_files -norecurse '{' >> $@
-	@echo '../files/gate.vhdl' >> $@
+	@echo 'top.sv' >> $@
 	@echo '}' >> $@
-	@echo 'source cmd.tcl' >> $@
 
 constraints.tcl:
+	@echo add_files -norecurse -fileset constrs_1 'constr.tcl' >> $@
+	@echo add_files -norecurse -fileset constrs_1 'constr.xdc' >> $@
 
 SYN_PRE_PROJECT_CMD := 
 SYN_POST_PROJECT_CMD := 
@@ -55,7 +56,7 @@ project.tcl:
 		echo $(TCL_CREATE) >> $@
 		echo # project properties >> $@
 		echo set_property "part" "$(SYN_DEVICE)$(SYN_PACKAGE)$(SYN_GRADE)" [current_project] >> $@
-		echo set_property "target_language" "vhdl" [current_project] >> $@
+		echo set_property "target_language" "verilog" [current_project] >> $@
 		echo set_property "top" "$(TOP_MODULE)" [get_property srcset [current_run]] >> $@
 		echo source files.tcl >> $@
 		echo source constraints.tcl >> $@
@@ -86,7 +87,7 @@ synthesize.tcl:
 		echo } >> $@
 		echo $(TCL_CLOSE) >> $@
 
-synthesize: project synthesize.tcl cmd.tcl ../files/gate.vhdl
+synthesize: project synthesize.tcl top.sv
 		$(SYN_PRE_SYNTHESIZE_CMD)
 		$(TCL_INTERPRETER) $@.tcl
 		$(SYN_POST_SYNTHESIZE_CMD)

@@ -38,6 +38,8 @@ files.tcl:
 	@echo 'xfile add rtl/lib_c/merged_top.vhd -lib_vhdl lib_c' >> $@
 	@echo 'xfile add rtl/lib_c/repinned_top.vhd -lib_vhdl lib_c' >> $@
 
+constraints.tcl:
+
 SYN_PRE_PROJECT_CMD := 
 SYN_POST_PROJECT_CMD := 
 
@@ -73,7 +75,7 @@ project.tcl:
 		echo $(TCL_SAVE) >> $@
 		echo $(TCL_CLOSE) >> $@
 
-project: files.tcl project.tcl
+project: files.tcl constraints.tcl project.tcl
 		$(SYN_PRE_PROJECT_CMD)
 		$(TCL_INTERPRETER) $@.tcl
 		$(SYN_POST_PROJECT_CMD)

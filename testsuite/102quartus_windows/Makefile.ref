@@ -33,6 +33,8 @@ files.tcl:
 		@echo set_global_assignment -name POST_FLOW_SCRIPT_FILE "quartus_sh:none.tcl" >> $@
 	@echo set_global_assignment -name VHDL_FILE ../files/gate.vhdl -library work >> $@
 
+constraints.tcl:
+
 SYN_PRE_PROJECT_CMD := 
 SYN_POST_PROJECT_CMD := 
 
@@ -48,7 +50,7 @@ project.tcl:
 		echo set_global_assignment -name DEVICE "$(SYN_DEVICE)" >> $@
 		echo set_global_assignment -name TOP_LEVEL_ENTITY "$(TOP_MODULE)" >> $@
 
-project: files.tcl project.tcl
+project: files.tcl constraints.tcl project.tcl
 		$(SYN_PRE_PROJECT_CMD)
 		$(TCL_INTERPRETER) $@.tcl
 		$(SYN_POST_PROJECT_CMD)

@@ -28,6 +28,8 @@ all: bitstream
 files.tcl:
 	@echo 'xfile add ../files/gate.vhdl' >> $@
 
+constraints.tcl:
+
 SYN_PRE_PROJECT_CMD := 
 SYN_POST_PROJECT_CMD := 
 
@@ -63,7 +65,7 @@ project.tcl:
 		echo $(TCL_SAVE) >> $@
 		echo $(TCL_CLOSE) >> $@
 
-project: files.tcl project.tcl
+project: files.tcl constraints.tcl project.tcl
 		$(SYN_PRE_PROJECT_CMD)
 		$(TCL_INTERPRETER) $@.tcl
 		$(SYN_POST_PROJECT_CMD)

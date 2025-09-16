@@ -32,6 +32,8 @@ files.tcl:
 	@echo 'add_file -type vhdl ../files/gate.vhdl' >> $@
 	@echo 'add_file -type vhdl ../files/gate3.vhd' >> $@
 
+constraints.tcl:
+
 SYN_PRE_PROJECT_CMD := 
 SYN_POST_PROJECT_CMD := 
 
@@ -50,7 +52,7 @@ project.tcl:
 		echo source files.tcl >> $@
 		echo $(TCL_CLOSE) >> $@
 
-project: files.tcl project.tcl
+project: files.tcl constraints.tcl project.tcl
 	$(SYN_PRE_PROJECT_CMD)
 	$(TCL_INTERPRETER) $@.tcl
 	$(SYN_POST_PROJECT_CMD)
