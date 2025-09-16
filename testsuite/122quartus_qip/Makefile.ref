@@ -70,7 +70,7 @@ CLEAN_TARGETS := $(LIBS) *.rpt *.smsg *.summary *.done *.jdi *.pin *.qws db incr
 clean:
 		rm -rf $(CLEAN_TARGETS)
 		rm -rf project bitstream
-		rm -rf project.tcl bitstream.tcl files.tcl
+		rm -rf project.tcl bitstream.tcl files.tcl constraints.tcl
 
 mrproper: clean
 		rm -rf *.sof *.pof *.jam *.jbc *.ekp *.jic

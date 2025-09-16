@@ -162,7 +162,7 @@ clean:
 		del /s /q /f $(CLEAN_TARGETS)
 		@-rmdir /s /q $(CLEAN_TARGETS) >nul 2>&1
 		del /s /q /f project synthesize translate map par bitstream
-		del /s /q /f project.tcl synthesize.tcl translate.tcl map.tcl par.tcl bitstream.tcl files.tcl
+		del /s /q /f project.tcl synthesize.tcl translate.tcl map.tcl par.tcl bitstream.tcl files.tcl constraints.tcl
 
 mrproper: clean
 		del /s /q /f *.bit *.bin *.mcs

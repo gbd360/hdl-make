@@ -73,7 +73,7 @@ clean:
 		del /s /q /f $(CLEAN_TARGETS)
 		@-rmdir /s /q $(CLEAN_TARGETS) >nul 2>&1
 		del /s /q /f project bitstream
-		del /s /q /f project.tcl bitstream.tcl files.tcl
+		del /s /q /f project.tcl bitstream.tcl files.tcl constraints.tcl
 
 mrproper: clean
 		del /s /q /f *.sof *.pof *.jam *.jbc *.ekp *.jic

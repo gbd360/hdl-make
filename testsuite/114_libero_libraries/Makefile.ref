@@ -91,7 +91,7 @@ CLEAN_TARGETS := $(LIBS) $(PROJECT) *.log
 clean:
 		rm -rf $(CLEAN_TARGETS)
 		rm -rf project bitstream
-		rm -rf project.tcl bitstream.tcl files.tcl
+		rm -rf project.tcl bitstream.tcl files.tcl constraints.tcl
 
 mrproper: clean
 		rm -rf *.pdb *.stp

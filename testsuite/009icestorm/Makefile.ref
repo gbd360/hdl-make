@@ -72,7 +72,7 @@ CLEAN_TARGETS := $(LIBS) $(PROJECT).asc $(PROJECT).blif
 clean:
 		rm -rf $(CLEAN_TARGETS)
 		rm -rf synthesize par bitstream
-		rm -rf synthesize.tcl par.tcl bitstream.tcl files.tcl
+		rm -rf synthesize.tcl par.tcl bitstream.tcl files.tcl constraints.tcl
 
 mrproper: clean
 		rm -rf $(PROJECT).bin
