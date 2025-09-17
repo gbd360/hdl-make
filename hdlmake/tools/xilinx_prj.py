@@ -74,12 +74,11 @@ class ToolXilinxProject:
     def write_commands_constraints(self):
         """Write TCL commands (in a makefile) to populate a Xilinx project
             with the constraints set
-           Xilinx redefine the function as it adds files in batch
         """
         constrset_dict = {}
         constrset_dict.update(self.SUPPORTED_FILES)
         # Don't do sort, because constraints order is important for Vivado
-        for srcfile in self.constrset:
+        for srcfile in self.constr_list:
             if type(srcfile) in constrset_dict:
                 self.writeln(
                     "\t@echo add_files -norecurse -fileset constrs_1 "

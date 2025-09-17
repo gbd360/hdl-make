@@ -38,11 +38,11 @@ class GhdlSyn(MakefileSyn):
         super(GhdlSyn, self).__init__()
         self._tcl_controls = {}
 
-    def write_makefile(self, top_manifest, fileset, constrset,
+    def write_makefile(self, top_manifest, fileset, constr_list,
                        filename=None, system_libs=None):
         """Generate a Makefile for the specific synthesis tool"""
         _check_synthesis_manifest(top_manifest)
-        self.makefile_setup(top_manifest, fileset, constrset, filename=filename)
+        self.makefile_setup(top_manifest, fileset, constr_list, filename=filename)
         self.makefile_check_tool('syn_path')
         self.makefile_includes()
         self._makefile_syn_top()

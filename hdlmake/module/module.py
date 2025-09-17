@@ -71,7 +71,7 @@ class Module(object):
         # Manifest Files Properties
         self.files = None
         # Manifest Constraints Properties
-        self.constraints = None
+        self.constraints = list()
         # Manifest Modules Properties
         self.modules = {'local': [], 'git': [], 'gitsm': [], 'svn': []}
         self.incl_makefiles = []                # List of paths of makefile files to include.
@@ -267,11 +267,11 @@ class Module(object):
     def _process_manifest_constraints(self):
         """Process the constraints instantiated by the HDLMake module
         Set self.constraints"""
-        from ..sourcefiles.sourcefileset import SourceFileSet
+        from ..sourcefiles.srcfile import create_source_file
         # HDL constraints provided by the module
         constraints = self.manifest_dict.get('constraints')
         if constraints is None:
-            self.constraints = SourceFileSet()
+            self.constraints = list()
             logging.debug("No constraints in the manifest at %s", self.path or '?')
             return
         # Be sure it is a list.
@@ -282,7 +282,7 @@ class Module(object):
         for f in constraints:
             fname = f[0] if isinstance(f, tuple) else f
             if fname in constraints_set:
-                logging.warning("file %s appear twice in Manifest %s", fname, self.path)
+                logging.warning("constraint %s appear twice in Manifest %s", fname, self.path)
             else:
                 constraints_set.add(fname)
                 nconstraints.append(f)
@@ -293,7 +293,8 @@ class Module(object):
                       str(self.manifest_dict["constraints"]),
                       self.library)
         paths = self._make_list_of_paths(nconstraints)
-        self.constraints = self._create_file_list_from_paths(paths=paths)
+        for path in paths:
+            self.constraints.append(create_source_file(path, self))
 
     def fetchto(self):
         """Get the fetchto folder for the module"""
