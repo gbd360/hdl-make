@@ -4,8 +4,8 @@
 ##############################################
 
 TOP_LIBRARY := work
-TOP_MODULE := wrong_vlog_parser
-PROJECT := wrong_vlog_parser
+TOP_MODULE := constr_test
+PROJECT := constr_test
 PROJECT_FILE := $(PROJECT).xpr
 TOOL_PATH := 
 TCL_INTERPRETER := vivado -mode batch -source
@@ -30,10 +30,13 @@ all: bitstream
 
 files.tcl:
 	@echo add_files -norecurse '{' >> $@
-	@echo 'wrong_vlog_parser.sv' >> $@
+	@echo 'constr_test.sv' >> $@
 	@echo '}' >> $@
 
 constraints.tcl:
+	@echo add_files -norecurse -fileset constrs_1 'constr.xdc' >> $@
+	@echo add_files -norecurse -fileset constrs_1 'constr.tcl' >> $@
+	@echo add_files -norecurse -fileset constrs_1 'constr_module/extra_constr.xdc' >> $@
 
 SYN_PRE_PROJECT_CMD := 
 SYN_POST_PROJECT_CMD := 
@@ -54,7 +57,7 @@ project.tcl:
 		echo $(TCL_CREATE) >> $@
 		echo # project properties >> $@
 		echo set_property "part" "$(SYN_DEVICE)$(SYN_PACKAGE)$(SYN_GRADE)" [current_project] >> $@
-		echo set_property "target_language" "vhdl" [current_project] >> $@
+		echo set_property "target_language" "verilog" [current_project] >> $@
 		echo set_property "top" "$(TOP_MODULE)" [get_property srcset [current_run]] >> $@
 		echo source files.tcl >> $@
 		echo source constraints.tcl >> $@
@@ -85,7 +88,7 @@ synthesize.tcl:
 		echo } >> $@
 		echo $(TCL_CLOSE) >> $@
 
-synthesize: project synthesize.tcl wrong_vlog_parser.sv
+synthesize: project synthesize.tcl constr_test.sv
 		$(SYN_PRE_SYNTHESIZE_CMD)
 		$(TCL_INTERPRETER) $@.tcl
 		$(SYN_POST_SYNTHESIZE_CMD)

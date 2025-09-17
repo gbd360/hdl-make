@@ -33,6 +33,8 @@ files.tcl:
 		@echo prj_src remove -all >> $@
 	@echo 'prj_src add ../files/gate.vhdl' >> $@
 
+constraints.tcl:
+
 SYN_PRE_PROJECT_CMD := 
 SYN_POST_PROJECT_CMD := 
 
@@ -51,7 +53,7 @@ project.tcl:
 		echo $(TCL_SAVE) >> $@
 		echo $(TCL_CLOSE) >> $@
 
-project: files.tcl project.tcl
+project: files.tcl constraints.tcl project.tcl
 		$(SYN_PRE_PROJECT_CMD)
 		$(TCL_INTERPRETER) $@.tcl
 		$(SYN_POST_PROJECT_CMD)
@@ -98,7 +100,7 @@ CLEAN_TARGETS := $(LIBS) *.sty *.ldf $(PROJECT)
 clean:
 		rm -rf $(CLEAN_TARGETS)
 		rm -rf project par bitstream prom
-		rm -rf project.tcl par.tcl bitstream.tcl prom.tcl files.tcl
+		rm -rf project.tcl par.tcl bitstream.tcl prom.tcl files.tcl constraints.tcl
 
 mrproper: clean
 		rm -rf *.jed

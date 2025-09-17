@@ -30,6 +30,8 @@ all: bitstream
 files.tcl:
 	@echo 'set_global_assignment -name VHDL_FILE ../files/gate.vhdl -library work' >> $@
 
+constraints.tcl:
+
 SYN_PRE_PROJECT_CMD := 
 SYN_POST_PROJECT_CMD := 
 
@@ -45,7 +47,7 @@ project.tcl:
 		echo set_global_assignment -name DEVICE \"$(SYN_DEVICE)\" >> $@
 		echo set_global_assignment -name TOP_LEVEL_ENTITY \"$(TOP_MODULE)\" >> $@
 
-project: files.tcl project.tcl
+project: files.tcl constraints.tcl project.tcl
 		$(SYN_PRE_PROJECT_CMD)
 		$(TCL_INTERPRETER) $@.tcl
 		$(SYN_POST_PROJECT_CMD)
@@ -67,7 +69,7 @@ CLEAN_TARGETS := $(LIBS) *.rpt *.smsg *.summary *.done *.jdi *.pin *.qws db incr
 clean:
 		rm -rf $(CLEAN_TARGETS)
 		rm -rf project bitstream
-		rm -rf project.tcl bitstream.tcl files.tcl
+		rm -rf project.tcl bitstream.tcl files.tcl constraints.tcl
 
 mrproper: clean
 		rm -rf *.sof *.pof *.jam *.jbc *.ekp *.jic

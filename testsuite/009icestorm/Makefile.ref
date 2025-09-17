@@ -27,6 +27,8 @@ all: bitstream
 files.tcl:
 	@echo 'read_verilog ../files/gate2.v' >> $@
 
+constraints.tcl:
+
 SYN_PRE_SYNTHESIZE_CMD := 
 SYN_POST_SYNTHESIZE_CMD := 
 
@@ -41,7 +43,7 @@ synthesize.tcl:
 		echo source files.tcl >> $@
 		echo synth_ice40 -top $(TOP_MODULE) -blif $(PROJECT).blif >> $@
 
-synthesize: files.tcl synthesize.tcl ../files/gate2.v
+synthesize: files.tcl constraints.tcl synthesize.tcl ../files/gate2.v
 		$(SYN_PRE_SYNTHESIZE_CMD)
 		$(TCL_INTERPRETER) $@.tcl
 		$(SYN_POST_SYNTHESIZE_CMD)
@@ -70,7 +72,7 @@ CLEAN_TARGETS := $(LIBS) $(PROJECT).asc $(PROJECT).blif
 clean:
 		rm -rf $(CLEAN_TARGETS)
 		rm -rf synthesize par bitstream
-		rm -rf synthesize.tcl par.tcl bitstream.tcl files.tcl
+		rm -rf synthesize.tcl par.tcl bitstream.tcl files.tcl constraints.tcl
 
 mrproper: clean
 		rm -rf $(PROJECT).bin

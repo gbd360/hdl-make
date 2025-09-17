@@ -34,6 +34,8 @@ files.tcl:
 	@echo 'xci_test.vhd' >> $@
 	@echo '}' >> $@
 
+constraints.tcl:
+
 SYN_PRE_PROJECT_CMD := 
 SYN_POST_PROJECT_CMD := 
 
@@ -56,11 +58,12 @@ project.tcl:
 		echo set_property "target_language" "vhdl" [current_project] >> $@
 		echo set_property "top" "$(TOP_MODULE)" [get_property srcset [current_run]] >> $@
 		echo source files.tcl >> $@
+		echo source constraints.tcl >> $@
 		echo update_compile_order -fileset sources_1 >> $@
 		echo update_compile_order -fileset sim_1 >> $@
 		echo $(TCL_CLOSE) >> $@
 
-project: files.tcl project.tcl
+project: files.tcl constraints.tcl project.tcl
 		$(SYN_PRE_PROJECT_CMD)
 		$(TCL_INTERPRETER) $@.tcl
 		$(SYN_POST_PROJECT_CMD)
@@ -146,7 +149,7 @@ CLEAN_TARGETS := $(LIBS) .Xil *.jou *.log *.pb *.dmp *.xsa $(PROJECT).cache $(PR
 clean:
 		rm -rf $(CLEAN_TARGETS)
 		rm -rf project synthesize par bitstream prom
-		rm -rf project.tcl synthesize.tcl par.tcl bitstream.tcl prom.tcl files.tcl
+		rm -rf project.tcl synthesize.tcl par.tcl bitstream.tcl prom.tcl files.tcl constraints.tcl
 
 mrproper: clean
 		rm -rf *.bit *.bin *.xsa

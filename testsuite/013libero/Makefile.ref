@@ -34,6 +34,8 @@ files.tcl:
 	@echo 'create_links -sdc syn.sdc' >> $@
 	@echo 'create_links -hdl_source ../files/gate.vhdl' >> $@
 
+constraints.tcl:
+
 SYN_PRE_PROJECT_CMD := 
 SYN_POST_PROJECT_CMD := 
 
@@ -49,7 +51,7 @@ project.tcl:
 		echo $(TCL_SAVE) >> $@
 		echo $(TCL_CLOSE) >> $@
 
-project: files.tcl project.tcl
+project: files.tcl constraints.tcl project.tcl
 	$(SYN_PRE_PROJECT_CMD)
 	$(TCL_INTERPRETER)$@.tcl
 	$(SYN_POST_PROJECT_CMD)
@@ -72,7 +74,7 @@ CLEAN_TARGETS := $(LIBS) $(PROJECT)
 clean:
 		rm -rf $(CLEAN_TARGETS)
 		rm -rf project bitstream
-		rm -rf project.tcl bitstream.tcl files.tcl
+		rm -rf project.tcl bitstream.tcl files.tcl constraints.tcl
 
 mrproper: clean
 		rm -rf *.pdb *.stp

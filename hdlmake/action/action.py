@@ -45,6 +45,7 @@ class Action(object):
         self.system_libs = set()
         self.parseable_fileset = SourceFileSet()
         self.privative_fileset = SourceFileSet()
+        self.constr_list = list()
         self.options = options
         self.top_library = None
 
@@ -232,6 +233,26 @@ class Action(object):
                 graph, self.parseable_fileset,
                 self.top_library, self.top_entity, extra_modules)
         dep_solver.check_graph(graph, self.parseable_fileset, system_libs, libs)
+
+    def _build_complete_constraints_set(self):
+        """Build constraints set with all the constraints listed in the complete pool"""
+        logging.debug("Begin build complete constraints set")
+        all_manifested_constraints = list()
+        # Use straight order so keep order: local constraints first (e.g. with pinout),
+        # dependencies last (e.g. module-specific timings).
+        for manifest in self.all_manifests:
+            all_manifested_constraints.append(manifest.constraints)
+        logging.debug("End build complete constraints set")
+        return all_manifested_constraints
+
+    def build_constraints_set(self):
+        """Initialize the constr_list contents"""
+        all_constraints = self._build_complete_constraints_set()
+        for constr_aux in all_constraints:
+            self.constr_list += constr_aux
+        if len(self.constr_list) > 0:
+            logging.info("Detected %d supported constraints that can be applied",
+                         len(self.constr_list))
 
     def get_top_manifest(self):
         """Get the Top module from the pool"""

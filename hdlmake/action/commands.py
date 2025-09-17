@@ -63,14 +63,18 @@ class Commands(Action):
         self._check_all_fetched()
         self.build_file_set()
         self.solve_file_set()
+        self.build_constraints_set()
         combined_fileset = self.parseable_fileset
         combined_fileset.add(self.privative_fileset)
+        combined_constr_list = self.constr_list
+
         if len(self.system_libs) != 0:
             logging.info("Following system libraries were\
  detected: %s" % (', '.join(self.system_libs)))
 
         self.tool.write_makefile(self.top_manifest,
                                  combined_fileset,
+                                 combined_constr_list,
                                  filename=filename,
                                  system_libs=self.system_libs)
 
