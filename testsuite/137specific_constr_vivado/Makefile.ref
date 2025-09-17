@@ -30,12 +30,13 @@ all: bitstream
 
 files.tcl:
 	@echo add_files -norecurse '{' >> $@
-	@echo 'top.sv' >> $@
+	@echo 'constr_test.sv' >> $@
 	@echo '}' >> $@
 
 constraints.tcl:
 	@echo add_files -norecurse -fileset constrs_1 'constr.xdc' >> $@
 	@echo add_files -norecurse -fileset constrs_1 'constr.tcl' >> $@
+	@echo add_files -norecurse -fileset constrs_1 'constr_module/extra_constr.xdc' >> $@
 
 SYN_PRE_PROJECT_CMD := 
 SYN_POST_PROJECT_CMD := 
@@ -87,7 +88,7 @@ synthesize.tcl:
 		echo } >> $@
 		echo $(TCL_CLOSE) >> $@
 
-synthesize: project synthesize.tcl top.sv
+synthesize: project synthesize.tcl constr_test.sv
 		$(SYN_PRE_SYNTHESIZE_CMD)
 		$(TCL_INTERPRETER) $@.tcl
 		$(SYN_POST_SYNTHESIZE_CMD)

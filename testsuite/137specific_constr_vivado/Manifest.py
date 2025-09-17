@@ -9,9 +9,13 @@ syn_top = "constr_test"
 syn_project = "constr_test"
 syn_tool = "vivado"
 
-files = ["top.sv"]
+files = ["constr_test.sv"]
 
 constraints = [
+    "constr.xdc",
     "constr.tcl",
-    "constr.xdc"
 ]
+
+modules = {
+    "local" : "constr_module",
+}

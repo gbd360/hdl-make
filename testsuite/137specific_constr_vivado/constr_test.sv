@@ -1,4 +1,4 @@
-module top (
+module constr_test (
     input  logic i_clk,
     input  logic i_rst_n,
     output logic led_o
@@ -12,4 +12,4 @@ end
 
 assign led_o = cnt[$high(cnt)];
 
-endmodule : top
+endmodule : constr_test
