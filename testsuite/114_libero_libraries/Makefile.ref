@@ -51,7 +51,7 @@ files.tcl:
 		echo 'add_file_to_library -library lib_c -file rtl/lib_c/repinned_top.vhd' >> $@
 
 constraints.tcl:
-
+	echo '# project constraints' >> $@
 SYN_PRE_PROJECT_CMD := 
 SYN_POST_PROJECT_CMD := 
 

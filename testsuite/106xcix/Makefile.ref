@@ -35,6 +35,7 @@ files.tcl:
 	@echo '}' >> $@
 
 constraints.tcl:
+	echo '# project constraints' >> $@
 
 SYN_PRE_PROJECT_CMD := 
 SYN_POST_PROJECT_CMD := 
@@ -53,7 +54,7 @@ SYN_POST_PROM_CMD :=
 
 project.tcl:
 		echo $(TCL_CREATE) >> $@
-		echo # project properties >> $@
+		echo '# project properties' >> $@
 		echo set_property "part" "$(SYN_DEVICE)$(SYN_PACKAGE)$(SYN_GRADE)" [current_project] >> $@
 		echo set_property "target_language" "vhdl" [current_project] >> $@
 		echo set_property "top" "$(TOP_MODULE)" [get_property srcset [current_run]] >> $@
@@ -71,7 +72,7 @@ project: files.tcl constraints.tcl project.tcl
 
 synthesize.tcl:
 		echo $(TCL_OPEN) >> $@
-		echo # synthesize properties >> $@
+		echo '# synthesize properties' >> $@
 		echo reset_run synth_1 >> $@
 		echo launch_runs synth_1 >> $@
 		echo wait_on_run synth_1 >> $@
@@ -94,7 +95,7 @@ synthesize: project synthesize.tcl xcix_test.vhd
 
 par.tcl:
 		echo $(TCL_OPEN) >> $@
-		echo # par properties >> $@
+		echo '# par properties' >> $@
 		echo reset_run impl_1 >> $@
 		echo launch_runs impl_1 >> $@
 		echo wait_on_run impl_1 >> $@
