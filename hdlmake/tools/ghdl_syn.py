@@ -48,7 +48,6 @@ class GhdlSyn(MakefileSyn):
         self._makefile_syn_top()
         self._makefile_syn_local()
         self._makefile_syn_files()
-        self._makefile_syn_constraints()
         self._makefile_syn_build()
         self._makefile_syn_clean()
         self._makefile_syn_phony()
@@ -117,7 +116,7 @@ class GhdlSyn(MakefileSyn):
         """Generate the synthesis Makefile targets for handling design build"""
         # HOW to set a file to write the synthesis result into.... 
         self.writeln("""\
-synthesis: constraints.tcl files.tcl
+synthesis: files.tcl
 \t$(GHDL) --synth $(GHDL_OPT) @files.tcl -e $(TOP_LIBRARY).$(TOP_MODULE)
 """)
 

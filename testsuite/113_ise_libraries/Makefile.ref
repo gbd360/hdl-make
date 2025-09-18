@@ -39,7 +39,7 @@ files.tcl:
 	@echo 'xfile add rtl/lib_c/repinned_top.vhd -lib_vhdl lib_c' >> $@
 
 constraints.tcl:
-
+	echo '# project constraints' >> $@
 SYN_PRE_PROJECT_CMD := 
 SYN_POST_PROJECT_CMD := 
 

@@ -136,8 +136,8 @@ endif""")
 
         # this function will add the ligrary creation commands, and if there are none
         # it will change self.HDLFILES so that no library commands are used!
-        self._makefile_syn_files_predefinelibs()        
-        
+        self._makefile_syn_files_predefinelibs()
+
         fileset_dict.update(self.HDL_FILES)
         fileset_dict.update(self.SUPPORTED_FILES)
         # Extra commands before source files.
@@ -152,18 +152,11 @@ endif""")
         self.writeln()
 
     def _makefile_syn_constraints(self):
-        """Write the constraints TCL section of the Makefile"""
-        constrset_dict = {}
-
+        """Write the constraints TCL section of the Makefile. There is no common
+        solution for the tools, so the rest part must be implemented tool-specific"""
+        # Create constraints.tcl target
         self.writeln('constraints.tcl:')
-
-        constrset_dict.update(self.SUPPORTED_FILES)
-        # Extra commands before source files.
-        if "constraints" in self._tcl_controls:
-            for command in self._tcl_controls["constraints"].split('\n'):
-                self.writeln('\t\t@echo {0} >> $@'.format(command))
-
-        self.writeln()
+        self.writeln("\techo '# project constraints' >> $@")
 
     def _makefile_syn_local(self):
         """Generic method to write the synthesis Makefile local target"""

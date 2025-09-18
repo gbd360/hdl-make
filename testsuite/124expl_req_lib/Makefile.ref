@@ -31,7 +31,7 @@ files.tcl:
 	@echo 'xfile add ../files/gate3.vhd' >> $@
 
 constraints.tcl:
-
+	echo '# project constraints' >> $@
 SYN_PRE_PROJECT_CMD := 
 SYN_POST_PROJECT_CMD := 
 

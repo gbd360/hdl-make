@@ -28,7 +28,7 @@ files.tcl:
 	@echo 'read_verilog ../files/gate2.v' >> $@
 
 constraints.tcl:
-
+	echo '# project constraints' >> $@
 SYN_PRE_SYNTHESIZE_CMD := 
 SYN_POST_SYNTHESIZE_CMD := 
 

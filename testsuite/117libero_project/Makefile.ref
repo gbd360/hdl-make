@@ -33,7 +33,7 @@ files.tcl:
 	@echo 'create_links -hdl_source ../files/gate.vhdl' >> $@
 
 constraints.tcl:
-
+	echo '# project constraints' >> $@
 SYN_PRE_PROJECT_CMD := 
 SYN_POST_PROJECT_CMD := 
 

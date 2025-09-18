@@ -21,9 +21,7 @@ files.tcl:
 		@echo --work=lib_c ../113_ise_libraries/rtl/lib_c/merged_top.vhd >> $@
 		@echo --work=lib_c ../113_ise_libraries/rtl/lib_c/repinned_top.vhd >> $@
 
-constraints.tcl:
-
-synthesis: constraints.tcl files.tcl
+synthesis: files.tcl
 	$(GHDL) --synth $(GHDL_OPT) @files.tcl -e $(TOP_LIBRARY).$(TOP_MODULE)
 
 CLEAN_TARGETS := $(LIBS) files.tcl *.vhd

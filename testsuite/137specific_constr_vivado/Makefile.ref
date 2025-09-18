@@ -34,6 +34,7 @@ files.tcl:
 	@echo '}' >> $@
 
 constraints.tcl:
+	echo '# project constraints' >> $@
 	@echo add_files -norecurse -fileset constrs_1 'constr.xdc' >> $@
 	@echo add_files -norecurse -fileset constrs_1 'constr.tcl' >> $@
 	@echo add_files -norecurse -fileset constrs_1 'constr_module/extra_constr.xdc' >> $@
@@ -55,7 +56,7 @@ SYN_POST_PROM_CMD :=
 
 project.tcl:
 		echo $(TCL_CREATE) >> $@
-		echo # project properties >> $@
+		echo '# project properties' >> $@
 		echo set_property "part" "$(SYN_DEVICE)$(SYN_PACKAGE)$(SYN_GRADE)" [current_project] >> $@
 		echo set_property "target_language" "verilog" [current_project] >> $@
 		echo set_property "top" "$(TOP_MODULE)" [get_property srcset [current_run]] >> $@
@@ -73,7 +74,7 @@ project: files.tcl constraints.tcl project.tcl
 
 synthesize.tcl:
 		echo $(TCL_OPEN) >> $@
-		echo # synthesize properties >> $@
+		echo '# synthesize properties' >> $@
 		echo reset_run synth_1 >> $@
 		echo launch_runs synth_1 >> $@
 		echo wait_on_run synth_1 >> $@
@@ -96,7 +97,7 @@ synthesize: project synthesize.tcl constr_test.sv
 
 par.tcl:
 		echo $(TCL_OPEN) >> $@
-		echo # par properties >> $@
+		echo '# par properties' >> $@
 		echo reset_run impl_1 >> $@
 		echo launch_runs impl_1 >> $@
 		echo wait_on_run impl_1 >> $@
