@@ -35,14 +35,17 @@ class Config(object):
         hdlmake.util.shell.check_windows_tools = self.prev_check_windows_tools
         hdlmake.util.shell.check_windows_commands = self.prev_check_windows_commands
 
-def compare_makefile():
-    # shutil.copy('Makefile', 'Makefile.ref')  # To regenerate
-    with open('Makefile.ref', 'r') as f:
+def compare_files(gen_file, ref_file):
+    with open(ref_file, 'r') as f:
         ref = f.read()
-    with open('Makefile', 'r') as f:
+    with open(gen_file, 'r') as f:
         out = f.read()
     assert out == ref
-    os.remove('Makefile')
+    os.remove(gen_file)
+
+def compare_makefile():
+    # shutil.copy('Makefile', 'Makefile.ref')  # To regenerate
+    compare_files('Makefile', 'Makefile.ref')
 
 def compare_makefile_filter(start):
     with open('Makefile.ref', 'r') as f:
@@ -67,6 +70,12 @@ def run_compare_filter(filter, **kwargs):
 def run_compare_xilinx(**kwargs):
     # HDLmake make the path absolute.  Remove this line.
     run_compare_filter(filter="XILINX_INI_PATH", **kwargs)
+
+def run_compare_json(path, capsys):
+    run(['list-json'], path=path)
+    with open(f"{path}/json.json", 'w') as pf:
+        pf.write(capsys.readouterr().out)
+    compare_files(f"{path}/json.json", f"{path}/json.ref")
 
 def run(args, **kwargs):
     with Config(**kwargs) as _:
@@ -632,6 +641,13 @@ def test_wrong_vlog_parse_136():
 
 def test_specific_constr_vivado_137():
     run_compare(path="137specific_constr_vivado")
+
+def test_list_json_138(capsys):
+    run_compare_json("138list_json", capsys)
+
+@pytest.mark.xfail
+def test_wrong_list_json_139(capsys):
+    run_compare_json("139list_wrong_json", capsys)
 
 @pytest.mark.xfail
 def test_xfail():

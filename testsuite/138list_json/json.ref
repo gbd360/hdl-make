@@ -1,0 +1,8 @@
+{
+  "files": [
+    {"file": "json_test.sv", "language": "sv", "library": "work"},
+    {"file": "constr.xdc", "language": "xdc"},
+    {"file": "constr.tcl", "language": "tcl"},
+    {"file": "constr_module/extra_constr.xdc", "language": "xdc"}
+  ]
+}

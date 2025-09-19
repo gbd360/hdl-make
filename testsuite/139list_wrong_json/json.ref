@@ -1,0 +1,6 @@
+{
+  "files": [
+    {"file": "gate2.sv", "language": "sv", "library": "work"},
+    {"no-no": "correct but wrong .json file"}
+  ]
+}
