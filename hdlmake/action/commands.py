@@ -24,7 +24,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
 import logging
-import os.path
+import os
 
 from subprocess import call
 from ..sourcefiles import new_dep_solver as dep_solver
@@ -158,11 +158,14 @@ class Commands(Action):
 
     def list_json(self):
         from ..sourcefiles.srcfile import VHDLFile, SVFile, VerilogFile
+        from ..sourcefiles.srcfile import XDCFile, TCLFile
         self._check_all_fetched()
         self.build_file_set()
+        self.build_constraints_set()
         self.solve_file_set()
         file_list = dep_solver.make_dependency_sorted_list(
             self.parseable_fileset)
+        file_list += self.constr_list # add constraints, if exist
         cwd = os.getcwd()
         first=True
         print('{')
@@ -186,10 +189,20 @@ class Commands(Action):
                 lang='sv'
             elif isinstance(f, VerilogFile):
                 lang='verilog'
+            elif isinstance(f, VerilogFile):
+                lang='verilog'
+            elif isinstance(f, XDCFile):
+                lang='xdc'
+            elif isinstance(f, TCLFile):
+                lang='tcl'
             else:
                 lang='unknown'
-            print ('    {{ "file": "{file}", "language": "{lang}"}}'.format(
-                file=f.rel_path(cwd), lang=lang), end='')
+            print('    {', end='')
+            print(f'"file": "{f.rel_path(cwd)}", ', end='')
+            print(f'"language": "{lang}"', end='')
+            if hasattr(f, 'library'):
+                print(f', "library": "{f.library}"', end='')
+            print('}', end=''),
         print()
         print('  ]')
         print('}')
