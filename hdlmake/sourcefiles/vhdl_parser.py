@@ -151,13 +151,14 @@ class VHDLParser(DepParser):
             as indexed plain strings. It adds the found PROVIDE relations
             to the file"""
             ent_name = text.group(1)
-            logging.debug("found entity %s.%s", dep_file.library, ent_name)
+            logging.info("found entity %s.%s", dep_file.library, ent_name)
             graph.add_provide(
                 dep_file,
                 DepRelation(ent_name, dep_file.library, DepRelation.ENTITY))
-            graph.add_require(
-                dep_file,
-                DepRelation(ent_name, dep_file.library, DepRelation.ARCHITECTURE))
+            # Can't guarantee this file has the architecture!
+            # graph.add_require(
+            #     dep_file,
+            #     DepRelation(ent_name, dep_file.library, DepRelation.ARCHITECTURE))
             return "<hdlmake entity_pattern %s.%s>" % (dep_file.library, ent_name)
 
         buf = re.sub(entity_pattern, do_entity, buf)
@@ -176,10 +177,26 @@ class VHDLParser(DepParser):
             ent_name = text.group(2)
             logging.debug("found architecture %s of entity %s.%s",
                           arch_name, dep_file.library, ent_name)
+
+            #Determine if entity has been defined
+            # ent_rel = graph.find_provider(DepRelation(ent_name, dep_file.library, DepRelation.ENTITY))
+            # if not ent_rel or ent_rel.provided_by is None:
+            #     logging.info("!!!Deferring entity %s inferred in %s", ent_name, dep_file)
+            #     #No entity for this architecture is present, so make a temporary one
+            #     graph.add_provide(
+            #         dep_file,
+            #         DepRelation(ent_name, dep_file.library, DepRelation.ENTITY, deferred_entity=True))
+            # else:
+            #     #Entity is provided elsewhere
+            #     logging.debug("Entity %s provided_by %s", ent_name, ent_rel.provided_by)
+
+            logging.info("Adding architecture %s require to entity in  %s", arch_name, ent_name)
+
+            #Provides THIS architecture
             graph.add_provide(
                 dep_file,
-                DepRelation(ent_name, dep_file.library, DepRelation.ARCHITECTURE))
-            # The architecture depends on the entity.
+                DepRelation(ent_name, dep_file.library, DepRelation.ARCHITECTURE, arch_name=arch_name))
+            #Make this file require the entity
             graph.add_require(
                 dep_file,
                 DepRelation(ent_name, dep_file.library, DepRelation.ENTITY))

@@ -41,7 +41,7 @@ class DepRelation(object):
     PACKAGE_BODY = 5
     MODULE = ENTITY
 
-    def __init__(self, obj_name, lib_name, rel_type):
+    def __init__(self, obj_name, lib_name, rel_type, arch_name=None, deferred_entity=False):
         assert rel_type in [
             DepRelation.ENTITY,
             DepRelation.PACKAGE,
@@ -52,10 +52,13 @@ class DepRelation(object):
         self.rel_type = rel_type
         self.obj_name = obj_name.lower()
         self.lib_name = None if lib_name is None else lib_name.lower()
+        self.arch_name = None if rel_type is not DepRelation.ARCHITECTURE else arch_name.lower()
+        self.deferred = deferred_entity if rel_type is DepRelation.ENTITY else False
         # Set of DepFile provided/required by this relation.
         # A unit can be provided only by one file, but required by many.
         self.provided_by = None
         self.required_by = set()
+        self.post_requires = set()
 
     def satisfies(self, rel_b):
         """Check if the current dependency relation matches the provided one"""
@@ -71,9 +74,10 @@ class DepRelation(object):
             self.ARCHITECTURE: "architecture",
             self.CONTEXT: "context",
             self.MODULE: "module"}
-        return "%s '%s.%s'" % (ostr[self.rel_type],
+        return "%s '%s.%s(%s)'" % (ostr[self.rel_type],
                                self.lib_name or '',
-                               self.obj_name)
+                               self.obj_name,
+                               self.arch_name or '')
 
     def __hash__(self):
         return hash(self.__repr__())
@@ -81,6 +85,7 @@ class DepRelation(object):
     def __eq__(self, other):
         return (isinstance(other, self.__class__)
                 and self.rel_type == other.rel_type
+                and self.arch_name == other.arch_name
                 and self.obj_name == other.obj_name
                 and self.lib_name == other.lib_name)
 

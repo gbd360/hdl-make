@@ -62,16 +62,38 @@ class AllRelations(object):
     def add_provide(self, file, rel):
         """Called by a parser when :param file: provides :param rel:"""
         if rel in file.provides:
-            # Alreay present
+            # Already present
             assert rel in self.rels
             return
+
         # Get the existing relation or insert the new one
         rel = self.rels.setdefault(rel, rel)
+        # if (deferred != rel.deferred):
+        #     existing_deferred = True
+        #     logging.warning(
+        #         "****The entity %s is being already deferred by file %s.",
+        #             str(rel), rel.provided_by)
+        #     exit(1)
+        # else:
+        #     existing_deferred = False
+        #     logging.warning(
+        #         "****The entity %s is being newly deferred by file %s.",
+        #             str(rel), rel.provided_by)
+        #     exit(1)
+
         # Update the graph:
         # :param file: provides :param rel:
-        file.provides.add(rel)
-        if rel.provided_by is None:
+	# file.provides.add(rel)
+        if rel.deferred:
+            logging.warning(
+                "The entity %s is being deferred by file %s.",
+                    str(rel), file)
+        elif rel.provided_by is None:
             rel.provided_by = file
+            rel.deferred = False
+            logging.warning(
+                "The %s is being provided by %s",
+                    str(rel), rel.provided_by)
         else:
             logging.warning(
                 "The %s is already provided by %s, discarding the same unit in %s",
@@ -109,7 +131,7 @@ def parse_source_files(graph, fileset):
                 # A file cannot depends on itself.
                 continue
             if rel.rel_type in (DepRelation.ARCHITECTURE, DepRelation.PACKAGE_BODY):
-                # The investigate file does not depend on the erchitecture or package body.
+                # The investigate file does not depend on the architecture or package body.
                 # However, the architecture or package body needs to be added in the
                 # design.
                 investigated_file.top_depends_on.add(rel.provided_by)
