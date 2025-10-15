@@ -5,8 +5,11 @@
 # Then install setuptools:
 # python -m pip install --upgrade pip setuptools wheel
 from setuptools import (setup, find_packages)
+from pathlib import Path
 
-exec(open('hdlmake/_version.py').read())
+this_directory = Path(__file__).parent
+exec(open(this_directory / "hdlmake" / "_version.py").read())
+long_description = (this_directory / "README.md").read_text()
 
 try:
     __version__
@@ -17,8 +20,9 @@ setup(
    name="hdlmake",
    version=__version__,
    description="Hdlmake generates multi-purpose makefiles for HDL projects management.",
-   author="Javier D. Garcia-Lasheras",
-   author_email="hdl-make@ohwr.org",
+   long_description=long_description,
+   long_description_content_type='text/markdown',
+   author="Javier D. Garcia-Lasheras, CERN",
    license="GPLv3",
    url="https://gitlab.com/ohwr/project/hdl-make",
    packages=find_packages(),
