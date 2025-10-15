@@ -189,8 +189,6 @@ class Commands(Action):
                 lang='sv'
             elif isinstance(f, VerilogFile):
                 lang='verilog'
-            elif isinstance(f, VerilogFile):
-                lang='verilog'
             elif isinstance(f, XDCFile):
                 lang='xdc'
             elif isinstance(f, TCLFile):
