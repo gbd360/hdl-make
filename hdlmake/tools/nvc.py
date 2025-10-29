@@ -26,7 +26,7 @@
 from __future__ import absolute_import
 
 from .makefilesim import MakefileSim
-from ..sourcefiles.srcfile import VHDLFile
+from ..sourcefiles.srcfile import VerilogFile, VHDLFile
 
 
 class ToolNVC(MakefileSim):
@@ -41,13 +41,13 @@ class ToolNVC(MakefileSim):
 
     STANDARD_LIBS = ['ieee', 'std']
 
-    HDL_FILES = {VHDLFile: ''}
+    HDL_FILES = {VerilogFile: '', VHDLFile: ''}
 
     CLEAN_TARGETS = {'clean': ["*.cf", "*.o", "$(TOP_MODULE)", "work"],
                      'mrproper': ["*.vcd"]}
 
-    SIMULATOR_CONTROLS = {'vlog': None,
-                          'vhdl': '$(NVC) --work={work} $(NVC_OPT) -a $(NVC_ANALYSIS_OPT)  $<',
+    SIMULATOR_CONTROLS = {'vlog': '$(NVC) --work={work} $(NVC_OPT) -a $(NVC_ANALYSIS_OPT) $<',
+                          'vhdl': '$(NVC) --work={work} $(NVC_OPT) -a $(NVC_ANALYSIS_OPT) $<',
                           'compiler': '$(NVC) $(NVC_OPT) -e $(NVC_ELAB_OPT) $(TOP_MODULE)'}
 
     def __init__(self):
