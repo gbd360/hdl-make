@@ -32,13 +32,13 @@ simulation: $(VERILOG_OBJ) $(VHDL_OBJ)
 
 
 work/gate/.gate_vhdl: ../files/gate.vhdl
-		$(NVC) --work=work $(NVC_OPT) -a $(NVC_ANALYSIS_OPT)  $<
+		$(NVC) --work=work $(NVC_OPT) -a $(NVC_ANALYSIS_OPT) $<
 		@mkdir -p $(dir $@) && touch $@
 
 
 work/gate3/.gate3_vhd: ../files/gate3.vhd \
 work/gate/.gate_vhdl
-		$(NVC) --work=work $(NVC_OPT) -a $(NVC_ANALYSIS_OPT)  $<
+		$(NVC) --work=work $(NVC_OPT) -a $(NVC_ANALYSIS_OPT) $<
 		@mkdir -p $(dir $@) && touch $@
 
 
