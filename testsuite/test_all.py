@@ -649,6 +649,9 @@ def test_list_json_138(capsys):
 def test_wrong_list_json_139(capsys):
     run_compare_json("139list_wrong_json", capsys)
 
+def test_tcl_ip_140():
+    run_compare(path="140file_ip")
+
 @pytest.mark.xfail
 def test_xfail():
     """This is a self-consistency test: the test is known to fail"""
