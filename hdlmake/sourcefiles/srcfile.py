@@ -94,6 +94,11 @@ class TCLFile(File):
     pass
 
 
+class TCLIPFile(ManualFile):
+    """This is the class providing the an IP created by a TCL script"""
+    pass
+
+
 # XILINX FILES
 
 class UCFFile(ParamFile):
@@ -492,4 +497,7 @@ def create_source_file_with_deps(path, module, provide, depends):
         return QIPFile(path, module, provide, depends)
     elif extension in ['qsys', ]:
         return QSYSFile(path, module, provide, depends)
+    elif extension == 'tcl':
+        assert len(depends) == 0
+        return TCLIPFile(path, module, provide, depends)
     raise Exception("Unknown extension '{}' for file {} (with deps)".format(extension, path))

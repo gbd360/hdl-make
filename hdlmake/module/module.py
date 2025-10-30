@@ -27,8 +27,6 @@ specific parent modules providing specific methods and attributes.
 
 """
 
-from __future__ import print_function
-from __future__ import absolute_import
 import os
 import logging
 from glob import glob
@@ -245,9 +243,9 @@ class Module(object):
             return
         # Be sure it is a list.
         files = path_mod.flatten_list(files)
+        nfiles = []
         # Remove duplicates
         files_set = set()
-        nfiles = []
         for f in files:
             fname = f[0] if isinstance(f, tuple) else f
             if fname in files_set:

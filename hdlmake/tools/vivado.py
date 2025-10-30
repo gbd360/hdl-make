@@ -26,7 +26,7 @@
 
 from __future__ import absolute_import
 from .xilinx import ToolXilinx
-from ..sourcefiles.srcfile import (VHDLFile, VerilogFile, SVFile,
+from ..sourcefiles.srcfile import (VHDLFile, VerilogFile, SVFile, TCLIPFile,
                                    XDCFile, XCIFile, XCIXFile, NGCFile, XMPFile,
                                    XCOFile, COEFile, BDFile, TCLFile, BMMFile,
                                    MIFFile, RAMFile, VHOFile, VEOFile, XCFFile)
@@ -68,7 +68,8 @@ class ToolVivado(ToolXilinx):
         SVFile:      ToolXilinx._XILINX_VERILOG_PROPERTY,
         NGCFile:     ToolXilinx._XILINX_ANY_SOURCE_PROPERTY,
         XCIFile:     ToolXilinx._XILINX_ANY_SOURCE_PROPERTY,
-        XCIXFile:     ToolXilinx._XILINX_ANY_SOURCE_PROPERTY,
+        XCIXFile:    ToolXilinx._XILINX_ANY_SOURCE_PROPERTY,
+        TCLIPFile:   ToolXilinx._XILINX_ANY_SOURCE_PROPERTY,
         BDFile:      ToolXilinx._XILINX_ANY_SOURCE_PROPERTY}
 
     CLEAN_TARGETS = {'clean': [".Xil", "*.jou", "*.log", "*.pb", "*.dmp", "*.xsa",
