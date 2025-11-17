@@ -25,7 +25,7 @@
 
 
 from __future__ import absolute_import
-from ..sourcefiles.srcfile import VHDLFile, VerilogFile, SVFile, TCLFile
+from ..sourcefiles.srcfile import VHDLFile, VerilogFile, SVFile, TCLFile, TCLIPFile
 from ..util import shell
 
 
@@ -49,7 +49,8 @@ class ToolXilinxProject:
     }
 
     SUPPORTED_FILES = {
-        TCLFile: 'source {srcfile}'
+        TCLFile: 'source {srcfile}',
+        TCLIPFile: 'source {srcfile}'
     }
 
     def write_commands_project(self):
@@ -64,7 +65,7 @@ class ToolXilinxProject:
         self.writeln("\t@echo add_files -norecurse '{' >> $@")
         for srcfile in self.fileset.sort():
             if type(srcfile) in fileset_dict \
-               and not isinstance(srcfile, TCLFile):
+               and not isinstance(srcfile, (TCLIPFile, TCLFile)):
                 self.writeln("\t@echo '{}' >> $@".format(
                     shell.tclpath(srcfile.rel_path())))
         self.writeln("\t@echo '}' >> $@")

@@ -30,9 +30,9 @@ all: bitstream
 
 files.tcl:
 	@echo add_files -norecurse '{' >> $@
-	@echo 'my_ip.tcl' >> $@
 	@echo '../files/gate3.vhd' >> $@
 	@echo '}' >> $@
+	@echo 'source my_ip.tcl' >> $@
 
 constraints.tcl:
 	echo '# project constraints' >> $@
@@ -87,7 +87,7 @@ synthesize.tcl:
 		echo } >> $@
 		echo $(TCL_CLOSE) >> $@
 
-synthesize: project synthesize.tcl ../files/gate3.vhd
+synthesize: project synthesize.tcl my_ip.tcl ../files/gate3.vhd
 		$(SYN_PRE_SYNTHESIZE_CMD)
 		$(TCL_INTERPRETER) $@.tcl
 		$(SYN_POST_SYNTHESIZE_CMD)
