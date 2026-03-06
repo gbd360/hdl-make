@@ -105,8 +105,8 @@ class ToolVunitSim(MakefileSim):
         # (here are the ones which vunit creates)
         self.generated = {"clean" : ["vunit_out"], "mrproper" : []} 
 
-    def write_makefile(self, top_manifest, fileset, filename=None, 
-                       system_libs=[]):
+    def write_makefile(self, top_manifest, fileset, constr_list,
+                       filename=None, system_libs=[]):
         """ 
         Writes makefile exploiting VUnit simulation target. If
         system_libs list contain 'altera', 'xilinx'... , makefile 
@@ -135,7 +135,7 @@ class ToolVunitSim(MakefileSim):
         self.compile_targets = [insert_lib(x) for x in system_libs if x in keys]
 
         # create makefile
-        self.makefile_setup(top_manifest, fileset, filename=filename)
+        self.makefile_setup(top_manifest, fileset, constr_list, filename=filename)
 
         # we don't check VUnit here, we know it exists as it is
         # installed with this package and already loaded -> no issue.
