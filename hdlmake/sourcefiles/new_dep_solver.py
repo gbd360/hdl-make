@@ -102,6 +102,12 @@ class AllRelations(object):
     def find_provider(self, rel):
         return self.rels.get(rel)
 
+    def find_all_architectures(self, ent_name, lib_name):
+        return [rel for rel in self.rels
+                if rel.rel_type == DepRelation.ARCHITECTURE
+                and rel.obj_name == ent_name.lower()
+                and rel.lib_name == lib_name.lower()]
+
 
 def parse_source_files(graph, fileset):
     """Parse source files to extract the graph dependencies"""
@@ -135,6 +141,14 @@ def parse_source_files(graph, fileset):
                 # However, the architecture or package body needs to be added in the
                 # design.
                 investigated_file.top_depends_on.add(rel.provided_by)
+            elif rel.rel_type == DepRelation.ENTITY:
+                arch_rels = graph.find_all_architectures(rel.obj_name, rel.lib_name)
+                if arch_rels:
+                    for arch_rel in arch_rels:
+                        if arch_rel.provided_by and arch_rel.provided_by is not investigated_file:
+                            investigated_file.depends_on.add(arch_rel.provided_by)
+                else:
+                    investigated_file.depends_on.add(rel.provided_by)
             else:
                 investigated_file.depends_on.add(rel.provided_by)
 
