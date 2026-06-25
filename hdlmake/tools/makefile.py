@@ -194,6 +194,7 @@ class ToolMakefile(object):
         if shell.check_windows_commands():
             # Change escaping of '&'.
             l = l.replace("'&'", "^&")
+            l = l.replace("'&&'", "^&^&")
             # Need to remove quotes as they are needed only for unix shell.
             l = l.replace('\\"', '"')
             l = l.replace("'", "")
