@@ -652,6 +652,11 @@ def test_wrong_list_json_139(capsys):
 def test_tcl_ip_140():
     run_compare(path="140file_ip")
 
+def test_two_arch_same_entity_141():
+    """A top level that instantiates two different architectures of the same
+    entity, with the entity and both architectures in separate files"""
+    run_compare(path="141two_arch_same_entity")
+
 @pytest.mark.xfail
 def test_xfail():
     """This is a self-consistency test: the test is known to fail"""

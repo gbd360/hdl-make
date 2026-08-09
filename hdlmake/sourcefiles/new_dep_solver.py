@@ -85,13 +85,13 @@ class AllRelations(object):
         # :param file: provides :param rel:
         file.provides.add(rel)
         if rel.deferred:
-            logging.warning(
+            logging.debug(
                 "The entity %s is being deferred by file %s.",
                     str(rel), file)
         elif rel.provided_by is None:
             rel.provided_by = file
             rel.deferred = False
-            logging.warning(
+            logging.debug(
                 "The %s is being provided by %s",
                     str(rel), rel.provided_by)
         else:
@@ -128,21 +128,20 @@ def parse_source_files(graph, fileset):
                 logging.debug("REQUIRE %s", r)
     logging.debug("PARSE SOURCE END: now the parsing is done")
 
-    # An entity needs all of its architectures to be part of the design, even
-    # though it does not depend on them for compilation order.  This used to be
-    # expressed by the entity requiring an ARCHITECTURE relation, but an
-    # architecture is now identified by its name too, so the entity cannot name
-    # the relation it needs: look them up instead.
-    for investigated_file in fileset:
-        for rel in investigated_file.provides:
-            if rel.rel_type != DepRelation.ENTITY:
-                continue
-            for arch_rel in graph.find_all_architectures(rel.obj_name, rel.lib_name):
-                if arch_rel.provided_by and arch_rel.provided_by is not investigated_file:
-                    investigated_file.top_depends_on.add(arch_rel.provided_by)
-
     # Compute file dependencies
     for investigated_file in fileset:
+        # Entities for which this file already names the architecture it wants,
+        # either because it instantiates a specific one or because it is itself
+        # an architecture of that entity.  Those must not drag in the sibling
+        # architectures.
+        named_archs = set()
+        for rel in investigated_file.requires:
+            if rel.rel_type == DepRelation.ARCHITECTURE:
+                named_archs.add((rel.lib_name, rel.obj_name))
+        for rel in investigated_file.provides:
+            if rel.rel_type == DepRelation.ARCHITECTURE:
+                named_archs.add((rel.lib_name, rel.obj_name))
+
         for rel in investigated_file.requires:
             if rel.provided_by is None:
                 continue
@@ -154,6 +153,18 @@ def parse_source_files(graph, fileset):
                 # However, the architecture or package body needs to be added in the
                 # design.
                 investigated_file.top_depends_on.add(rel.provided_by)
+            elif rel.rel_type == DepRelation.ENTITY:
+                # The entity has to be analysed before anything referencing it.
+                investigated_file.depends_on.add(rel.provided_by)
+                if (rel.lib_name, rel.obj_name) not in named_archs:
+                    # Nothing named an architecture, so every architecture of
+                    # the entity has to be part of the design.  They are not
+                    # compilation-order dependencies.
+                    for arch_rel in graph.find_all_architectures(
+                            rel.obj_name, rel.lib_name):
+                        if (arch_rel.provided_by is not None
+                                and arch_rel.provided_by is not investigated_file):
+                            investigated_file.top_depends_on.add(arch_rel.provided_by)
             else:
                 investigated_file.depends_on.add(rel.provided_by)
 
@@ -263,8 +274,14 @@ def make_dependency_set(graph, fileset, top_library, top_entity, extra_modules=N
         return fileset
     top_file = rel.provided_by
 
+    # The top level entity is not instantiated by anything, so nothing pulls in
+    # its architectures: add them explicitly.
+    extra_files = [arch_rel.provided_by
+                   for arch_rel in graph.find_all_architectures(
+                       top_entity, top_library)
+                   if arch_rel.provided_by is not None]
+
     # Add extra modules
-    extra_files = []
     if extra_modules is not None:
         for name in extra_modules:
             rel = DepRelation(name, top_library, DepRelation.MODULE)
