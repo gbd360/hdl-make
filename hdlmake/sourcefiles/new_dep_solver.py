@@ -134,7 +134,7 @@ def parse_source_files(graph, fileset):
             if rel.provided_by is None:
                 continue
             if rel.provided_by is investigated_file:
-                # A file cannot depends on itself.
+                # A file cannot depend on itself.
                 continue
             if rel.rel_type in (DepRelation.ARCHITECTURE, DepRelation.PACKAGE_BODY):
                 # The investigate file does not depend on the architecture or package body.
