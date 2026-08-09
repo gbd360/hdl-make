@@ -83,7 +83,7 @@ class AllRelations(object):
 
         # Update the graph:
         # :param file: provides :param rel:
-	# file.provides.add(rel)
+        file.provides.add(rel)
         if rel.deferred:
             logging.warning(
                 "The entity %s is being deferred by file %s.",
@@ -128,6 +128,19 @@ def parse_source_files(graph, fileset):
                 logging.debug("REQUIRE %s", r)
     logging.debug("PARSE SOURCE END: now the parsing is done")
 
+    # An entity needs all of its architectures to be part of the design, even
+    # though it does not depend on them for compilation order.  This used to be
+    # expressed by the entity requiring an ARCHITECTURE relation, but an
+    # architecture is now identified by its name too, so the entity cannot name
+    # the relation it needs: look them up instead.
+    for investigated_file in fileset:
+        for rel in investigated_file.provides:
+            if rel.rel_type != DepRelation.ENTITY:
+                continue
+            for arch_rel in graph.find_all_architectures(rel.obj_name, rel.lib_name):
+                if arch_rel.provided_by and arch_rel.provided_by is not investigated_file:
+                    investigated_file.top_depends_on.add(arch_rel.provided_by)
+
     # Compute file dependencies
     for investigated_file in fileset:
         for rel in investigated_file.requires:
@@ -141,14 +154,6 @@ def parse_source_files(graph, fileset):
                 # However, the architecture or package body needs to be added in the
                 # design.
                 investigated_file.top_depends_on.add(rel.provided_by)
-            elif rel.rel_type == DepRelation.ENTITY:
-                arch_rels = graph.find_all_architectures(rel.obj_name, rel.lib_name)
-                if arch_rels:
-                    for arch_rel in arch_rels:
-                        if arch_rel.provided_by and arch_rel.provided_by is not investigated_file:
-                            investigated_file.depends_on.add(arch_rel.provided_by)
-                else:
-                    investigated_file.depends_on.add(rel.provided_by)
             else:
                 investigated_file.depends_on.add(rel.provided_by)
 
