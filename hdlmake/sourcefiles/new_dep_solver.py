@@ -62,16 +62,38 @@ class AllRelations(object):
     def add_provide(self, file, rel):
         """Called by a parser when :param file: provides :param rel:"""
         if rel in file.provides:
-            # Alreay present
+            # Already present
             assert rel in self.rels
             return
+
         # Get the existing relation or insert the new one
         rel = self.rels.setdefault(rel, rel)
+        # if (deferred != rel.deferred):
+        #     existing_deferred = True
+        #     logging.warning(
+        #         "****The entity %s is being already deferred by file %s.",
+        #             str(rel), rel.provided_by)
+        #     exit(1)
+        # else:
+        #     existing_deferred = False
+        #     logging.warning(
+        #         "****The entity %s is being newly deferred by file %s.",
+        #             str(rel), rel.provided_by)
+        #     exit(1)
+
         # Update the graph:
         # :param file: provides :param rel:
         file.provides.add(rel)
-        if rel.provided_by is None:
+        if rel.deferred:
+            logging.debug(
+                "The entity %s is being deferred by file %s.",
+                    str(rel), file)
+        elif rel.provided_by is None:
             rel.provided_by = file
+            rel.deferred = False
+            logging.debug(
+                "The %s is being provided by %s",
+                    str(rel), rel.provided_by)
         else:
             logging.warning(
                 "The %s is already provided by %s, discarding the same unit in %s",
@@ -79,6 +101,12 @@ class AllRelations(object):
 
     def find_provider(self, rel):
         return self.rels.get(rel)
+
+    def find_all_architectures(self, ent_name, lib_name):
+        return [rel for rel in self.rels
+                if rel.rel_type == DepRelation.ARCHITECTURE
+                and rel.obj_name == ent_name.lower()
+                and rel.lib_name == lib_name.lower()]
 
 
 def parse_source_files(graph, fileset):
@@ -102,17 +130,41 @@ def parse_source_files(graph, fileset):
 
     # Compute file dependencies
     for investigated_file in fileset:
+        # Entities for which this file already names the architecture it wants,
+        # either because it instantiates a specific one or because it is itself
+        # an architecture of that entity.  Those must not drag in the sibling
+        # architectures.
+        named_archs = set()
+        for rel in investigated_file.requires:
+            if rel.rel_type == DepRelation.ARCHITECTURE:
+                named_archs.add((rel.lib_name, rel.obj_name))
+        for rel in investigated_file.provides:
+            if rel.rel_type == DepRelation.ARCHITECTURE:
+                named_archs.add((rel.lib_name, rel.obj_name))
+
         for rel in investigated_file.requires:
             if rel.provided_by is None:
                 continue
             if rel.provided_by is investigated_file:
-                # A file cannot depends on itself.
+                # A file cannot depend on itself.
                 continue
             if rel.rel_type in (DepRelation.ARCHITECTURE, DepRelation.PACKAGE_BODY):
-                # The investigate file does not depend on the erchitecture or package body.
+                # The investigate file does not depend on the architecture or package body.
                 # However, the architecture or package body needs to be added in the
                 # design.
                 investigated_file.top_depends_on.add(rel.provided_by)
+            elif rel.rel_type == DepRelation.ENTITY:
+                # The entity has to be analysed before anything referencing it.
+                investigated_file.depends_on.add(rel.provided_by)
+                if (rel.lib_name, rel.obj_name) not in named_archs:
+                    # Nothing named an architecture, so every architecture of
+                    # the entity has to be part of the design.  They are not
+                    # compilation-order dependencies.
+                    for arch_rel in graph.find_all_architectures(
+                            rel.obj_name, rel.lib_name):
+                        if (arch_rel.provided_by is not None
+                                and arch_rel.provided_by is not investigated_file):
+                            investigated_file.top_depends_on.add(arch_rel.provided_by)
             else:
                 investigated_file.depends_on.add(rel.provided_by)
 
@@ -222,8 +274,14 @@ def make_dependency_set(graph, fileset, top_library, top_entity, extra_modules=N
         return fileset
     top_file = rel.provided_by
 
+    # The top level entity is not instantiated by anything, so nothing pulls in
+    # its architectures: add them explicitly.
+    extra_files = [arch_rel.provided_by
+                   for arch_rel in graph.find_all_architectures(
+                       top_entity, top_library)
+                   if arch_rel.provided_by is not None]
+
     # Add extra modules
-    extra_files = []
     if extra_modules is not None:
         for name in extra_modules:
             rel = DepRelation(name, top_library, DepRelation.MODULE)

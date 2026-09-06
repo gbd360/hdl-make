@@ -155,9 +155,10 @@ class VHDLParser(DepParser):
             graph.add_provide(
                 dep_file,
                 DepRelation(ent_name, dep_file.library, DepRelation.ENTITY))
-            graph.add_require(
-                dep_file,
-                DepRelation(ent_name, dep_file.library, DepRelation.ARCHITECTURE))
+            # Can't guarantee this file has the architecture!
+            # graph.add_require(
+            #     dep_file,
+            #     DepRelation(ent_name, dep_file.library, DepRelation.ARCHITECTURE))
             return "<hdlmake entity_pattern %s.%s>" % (dep_file.library, ent_name)
 
         buf = re.sub(entity_pattern, do_entity, buf)
@@ -176,10 +177,24 @@ class VHDLParser(DepParser):
             ent_name = text.group(2)
             logging.debug("found architecture %s of entity %s.%s",
                           arch_name, dep_file.library, ent_name)
+
+            #Determine if entity has been defined
+            # ent_rel = graph.find_provider(DepRelation(ent_name, dep_file.library, DepRelation.ENTITY))
+            # if not ent_rel or ent_rel.provided_by is None:
+            #     logging.info("!!!Deferring entity %s inferred in %s", ent_name, dep_file)
+            #     #No entity for this architecture is present, so make a temporary one
+            #     graph.add_provide(
+            #         dep_file,
+            #         DepRelation(ent_name, dep_file.library, DepRelation.ENTITY, deferred_entity=True))
+            # else:
+            #     #Entity is provided elsewhere
+            #     logging.debug("Entity %s provided_by %s", ent_name, ent_rel.provided_by)
+
+            #Provides THIS architecture
             graph.add_provide(
                 dep_file,
-                DepRelation(ent_name, dep_file.library, DepRelation.ARCHITECTURE))
-            # The architecture depends on the entity.
+                DepRelation(ent_name, dep_file.library, DepRelation.ARCHITECTURE, arch_name=arch_name))
+            #Make this file require the entity
             graph.add_require(
                 dep_file,
                 DepRelation(ent_name, dep_file.library, DepRelation.ENTITY))
@@ -328,9 +343,18 @@ class VHDLParser(DepParser):
             if not lib_name or lib_name == "work":
                 lib_name = dep_file.library
             ent_name = text.group("ENTITY")
+            arch_name = text.group("ARCH")
             graph.add_require(
                 dep_file,
                 DepRelation(ent_name, lib_name, DepRelation.ENTITY))
+            if arch_name:
+                # A VHDL-2008 direct instantiation may name the architecture it
+                # wants: depend on that one instead of on every architecture of
+                # the entity.
+                graph.add_require(
+                    dep_file,
+                    DepRelation(ent_name, lib_name, DepRelation.ARCHITECTURE,
+                                arch_name=arch_name))
             return "<hdlmake direct instance %s|%s|%s>" % (text.group("LABEL"), lib_name, ent_name)
         buf = re.sub(direct_instance_pattern, do_direct_instance, buf)
 
@@ -339,13 +363,35 @@ class VHDLParser(DepParser):
             r"^\s*library\s*(\w+)\s*;",
             re.DOTALL | re.MULTILINE | re.IGNORECASE)
 
+        declared_libs = set()
+
         def do_library(text):
             """Function to be applied by re.sub to every match of the
             library_pattern in the VHDL code -- group() returns positive
-            matches as indexed plain strings. It adds the used libraries
-            to the file's 'library' property"""
+            matches as indexed plain strings. It records the declared
+            libraries so that the unused ones can be reported"""
+            lib_name = text.group(1).lower()
+            if lib_name == "work":
+                # Work is an alias for the current library
+                lib_name = dep_file.library.lower()
+            declared_libs.add(lib_name)
             logging.debug("use library %s", text.group(1))
             return "<hdlmake library %s>" % text.group(1)
         buf = re.sub(library_pattern, do_library, buf)
+
+        # A library clause that is never referenced still makes the analyser
+        # require that library to exist, but gives hdlmake nothing to order the
+        # file against: report it so that it can be removed.  'ieee' and 'std'
+        # are defined by the language and always available, so an unused clause
+        # for them is harmless.
+        used_libs = set([dep_file.library.lower(), 'ieee', 'std'])
+        for rel in dep_file.requires:
+            if rel.lib_name is not None:
+                used_libs.add(rel.lib_name.lower())
+        for lib_name in sorted(declared_libs - used_libs):
+            logging.warning(
+                "%s: library '%s' is declared but never used, "
+                "the library clause should be removed",
+                dep_file.path, lib_name)
         # logging.debug("\n" + buf) # print modified buffer.
 
