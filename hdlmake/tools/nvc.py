@@ -46,9 +46,13 @@ class ToolNVC(MakefileSim):
     CLEAN_TARGETS = {'clean': ["*.cf", "*.o", "$(TOP_MODULE)", "work"],
                      'mrproper': ["*.vcd"]}
 
-    SIMULATOR_CONTROLS = {'vlog': '$(NVC) --work={work} $(NVC_OPT) -a $(NVC_ANALYSIS_OPT) $<',
-                          'vhdl': '$(NVC) --work={work} $(NVC_OPT) -a $(NVC_ANALYSIS_OPT) $<',
-                          'compiler': '$(NVC) $(NVC_OPT) -e $(NVC_ELAB_OPT) $(TOP_MODULE)'}
+    # NVC does not look in the current directory for libraries, but that is
+    # where the makefile creates them, so every command needs '-L .' to see
+    # any library other than the work one.  It is not part of NVC_OPT so that
+    # setting nvc_opt in a manifest cannot drop it.
+    SIMULATOR_CONTROLS = {'vlog': '$(NVC) -L . --work={work} $(NVC_OPT) -a $(NVC_ANALYSIS_OPT) $<',
+                          'vhdl': '$(NVC) -L . --work={work} $(NVC_OPT) -a $(NVC_ANALYSIS_OPT) $<',
+                          'compiler': '$(NVC) -L . $(NVC_OPT) -e $(NVC_ELAB_OPT) $(TOP_MODULE)'}
 
     def __init__(self):
         super(ToolNVC, self).__init__()

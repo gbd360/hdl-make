@@ -4,14 +4,14 @@
 ##############################################
 
 TOP_LIBRARY := work
-TOP_MODULE := gate3
+TOP_MODULE := gate8
 
 NVC := nvc
 NVC_OPT := --std=2008
 
-NVC_ANALYSIS_OPT := --psl
+NVC_ANALYSIS_OPT := 
 
-NVC_ELAB_OPT := --verbose
+NVC_ELAB_OPT := 
 
 #target for performing local simulation
 local: sim_pre_cmd simulation sim_post_cmd
@@ -19,25 +19,25 @@ local: sim_pre_cmd simulation sim_post_cmd
 VERILOG_SRC := 
 VERILOG_OBJ := 
 VHDL_SRC := ../files/gate.vhdl \
-../files/gate3.vhd \
+../files/gate8.vhdl \
 
-VHDL_OBJ := work/gate/.gate_vhdl \
-work/gate3/.gate3_vhd \
+VHDL_OBJ := gatelib/gate/.gate_vhdl \
+work/gate8/.gate8_vhdl \
 
-LIBS := work
-LIB_IND := work/.work
+LIBS := gatelib work
+LIB_IND := gatelib/.gatelib work/.work
 
 simulation: $(VERILOG_OBJ) $(VHDL_OBJ)
 		$(NVC) -L . $(NVC_OPT) -e $(NVC_ELAB_OPT) $(TOP_MODULE)
 
 
-work/gate/.gate_vhdl: ../files/gate.vhdl
-		$(NVC) -L . --work=work $(NVC_OPT) -a $(NVC_ANALYSIS_OPT) $<
+gatelib/gate/.gate_vhdl: ../files/gate.vhdl
+		$(NVC) -L . --work=gatelib $(NVC_OPT) -a $(NVC_ANALYSIS_OPT) $<
 		@mkdir -p $(dir $@) && touch $@
 
 
-work/gate3/.gate3_vhd: ../files/gate3.vhd \
-work/gate/.gate_vhdl
+work/gate8/.gate8_vhdl: ../files/gate8.vhdl \
+gatelib/gate/.gate_vhdl
 		$(NVC) -L . --work=work $(NVC_OPT) -a $(NVC_ANALYSIS_OPT) $<
 		@mkdir -p $(dir $@) && touch $@
 

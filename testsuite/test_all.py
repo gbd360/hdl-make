@@ -657,6 +657,12 @@ def test_two_arch_same_entity_141():
     entity, with the entity and both architectures in separate files"""
     run_compare(path="141two_arch_same_entity")
 
+def test_nvc_libraries_142():
+    """NVC does not search the current directory for libraries, so it needs
+    -L to see anything outside the work library: a top level in work
+    instantiating an entity from another library"""
+    run_compare(path="142nvc_libraries")
+
 @pytest.mark.xfail
 def test_xfail():
     """This is a self-consistency test: the test is known to fail"""
