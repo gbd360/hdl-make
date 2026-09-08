@@ -551,6 +551,9 @@ class VerilogParser(DepParser):
         m_inside_module = re.compile(
             r"(?:module|interface)"
                 r"\s+(?P<module_name>\w+)"
+                # opt-package imports in the header:
+                #    module foo import pkg_a::*, pkg_b::x; #(
+                r"\s*(?:\bimport\b[^;]*?;\s*)?"
                 # opt-parameters
                 r"\s*(?:#\s*\(.*?\)\s*)?"
                 r"(?:\((?P<port_map>.*?)\))?"
