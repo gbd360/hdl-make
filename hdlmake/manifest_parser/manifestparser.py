@@ -286,6 +286,10 @@ class ManifestParser(ConfigParser):
             {'name': 'xvhdl_opt',
              'default': "",
              'help': "Additional options for vhdl",
+             'type': ''},
+            {'name': 'xelab_opt',
+             'default': "-debug all",
+             'help': "Options for xelab (default -debug all)",
              'type': ''}]
         self.add_option_list(vivado_sim_options)
         self.add_delimiter()

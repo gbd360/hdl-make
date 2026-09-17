@@ -50,7 +50,7 @@ class ToolVivadoSim(ToolXilinxProject, MakefileSim):
 
     SIMULATOR_CONTROLS = {'vlog': 'xvlog $(XVLOG_OPT) $<',
                           'vhdl': 'xvhdl --work {work} $(XVHDL_OPT) $<',
-                          'compiler': 'xelab -debug all $(TOP_MODULE) '
+                          'compiler': 'xelab $(XELAB_OPT) $(TOP_MODULE) '
                                       '-s $(TOP_MODULE)'}
 
     def __init__(self):
@@ -74,13 +74,23 @@ class ToolVivadoSim(ToolXilinxProject, MakefileSim):
         self.writeln("XVHDL_OPT := {xvhdl_opt}\n".format(xvhdl_opt=xvhdl_opt))
         xvlog_opt = self.manifest_dict.get("xvlog_opt", '')
         self.writeln("XVLOG_OPT := {xvlog_opt}\n".format(xvlog_opt=xvlog_opt))
+        # Elaboration options, e.g. "-debug typical" or "--relax"; default
+        # "-debug all" so waveforms of every signal can be logged.
+        xelab_opt = self.manifest_dict.get("xelab_opt", '-debug all')
+        self.writeln("XELAB_OPT := {xelab_opt}\n".format(xelab_opt=xelab_opt))
 
     def _makefile_sim_compilation(self):
         """Generate compile simulation Makefile target for Vivado Simulator"""
         libs = self.get_all_libs()
         self._makefile_sim_libs_variables(libs)
         self.writeln("simulation: $(VERILOG_OBJ) $(VHDL_OBJ)")
-        self.writeln("\t\t" + self.SIMULATOR_CONTROLS['compiler'])
+        # xelab searches only `work` unless told otherwise; a design unit
+        # compiled into any other library (VHDL `library = "..."` in a
+        # Manifest) is invisible to the elaborator without -L <lib>.
+        xelab = self.SIMULATOR_CONTROLS['compiler']
+        for lib in libs:
+            xelab += " -L " + lib
+        self.writeln("\t\t" + xelab)
         self.writeln()
         self._makefile_sim_dep_files()
         self._makefile_sim_project()
